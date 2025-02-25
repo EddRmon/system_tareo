@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:system_tareo/blocs/auth_bloc.dart';
-import 'package:system_tareo/blocs/auth_event.dart';
 import 'package:system_tareo/blocs/auth_state.dart';
 
 class SingIn extends StatefulWidget {
@@ -14,6 +13,12 @@ class SingIn extends StatefulWidget {
 class _SingInState extends State<SingIn> {
   final TextEditingController _user = TextEditingController();
   final TextEditingController _pass = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    _user.dispose();
+    _pass.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -97,11 +102,11 @@ class _SingInState extends State<SingIn> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black),
                         onPressed: ()  {
-                          final username = _user.text;
-                          final password = _pass.text; 
-                          final conver = int.parse(username);
-                          context.read<AuthBloc>().add(LoginRequested(username: conver, password: password)) ;
-                          
+                          //final username = _user.text;
+                         // final password = _pass.text; 
+                         // final conver = int.parse(username);
+                         // context.read<AuthBloc>().add(LoginRequested(username: conver, password: password)) ;
+                          Navigator.popAndPushNamed(context, '/barraNavegacion');
                         },
                         child: const SizedBox(
                           height: 40,

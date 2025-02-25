@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:system_tareo/views/inicio_evento.dart';
+
 
 class OpcionesDialogScreen extends StatefulWidget {
   const OpcionesDialogScreen({super.key});
@@ -60,7 +60,7 @@ class _OpcionesDialogScreenState extends State<OpcionesDialogScreen> {
                 opciones[index]['text'],
                 opciones[index]['color'],
                 () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const UnidadesProcesadas() ));
+               
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content:
