@@ -199,7 +199,7 @@ class _BotonPadreProduccionState extends State<BotonPadreProduccion> {
                     const Text('Unidades Procesadas'),
                     SizedBox(
               width: double.maxFinite,
-              child: BotonInicioProduccion(onFinish: () {  }, text: '', onStart: () {  },),),
+              child: BotonInicioProduccion( text: widget.texto, onStart: onStart,),),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(); // Cierra el diálogo

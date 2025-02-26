@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BotonInicioProduccion extends StatefulWidget {
-  const BotonInicioProduccion({super.key, required this.onFinish, required this.text, required VoidCallback onStart});
-  final VoidCallback onFinish;
+  const BotonInicioProduccion({super.key, required this.text, required this.onStart,});
+  final VoidCallback onStart;
   final String text;
 
   @override
@@ -64,7 +64,8 @@ class _BotonInicioProduccionState extends State<BotonInicioProduccion> {
             ElevatedButton(
               onPressed: () {
                 // Llama al callback para notificar a BotonInicioPreparacion que se presionó "FINALIZAR"
-                widget.onFinish();
+                widget.onStart();
+                Navigator.of(context).pop(); // Cierra solo el ModalBottomSheet
                 Navigator.of(context).pop(); // Cierra solo el ModalBottomSheet
               },
               style: ElevatedButton.styleFrom(

@@ -35,7 +35,7 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
     super.initState();
     _loadState(); // Cargar el estado persistente al iniciar
   }
-
+  
   // Método para cargar el estado desde SharedPreferences con manejo de errores
   Future<void> _loadState() async {
     try {
@@ -57,15 +57,7 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
     }
   }
 
-  // Método para guardar el estado en SharedPreferences con manejo de errores
-  Future<void> _saveState() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('preparationOptionStates', jsonEncode(preparationOptionStates));
-    } catch (e) {
-      print('Error al guardar el estado: $e');
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +65,7 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[50], // Fondo minimalista y claro
       appBar: AppBar(
+      
         elevation: 0, // Sin sombra para un look limpio
         title: const Text(
           'Preparación',
@@ -132,20 +125,18 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
             true; // Habilitada solo si no hay opción activa o es la opción activa
 
     return InkWell(
-      onTap: isEnabled
-          ? () {
-              // Navegar directamente a BotonInicioPreparacion con el texto de la opción
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BotonInicioPreparacion(texto: text, initialIsProducing: true),
-                ),
-              );
-            }
-          : null, // Deshabilitar el tap si no está habilitada
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>  BotonInicioPreparacion(
+                      texto: text,
+                    )));
+      },
       borderRadius: BorderRadius.circular(12),
       child: Opacity(
-        opacity: isEnabled ? 1.0 : 0.5, // Reducir opacidad si está deshabilitada
+        opacity:
+            isEnabled ? 1.0 : 0.5, // Reducir opacidad si está deshabilitada
         child: Container(
           decoration: BoxDecoration(
             color: isProcessing ? Colors.red : color,
@@ -179,4 +170,43 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
       ),
     );
   }
+
+
 }
+
+/*
+import 'package:flutter/material.dart';
+
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          width: size.width > 360 ? 200 : 120, // Ancho responsivo
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Buscar...',
+              prefixIcon: Icon(Icons.search, size: 18),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              filled: true,
+              fillColor: const Color.fromARGB(255, 236, 236, 236),
+              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              hintStyle: const TextStyle(fontSize: 12),
+            ),
+            style: const TextStyle(fontSize: 12),
+            onChanged: (query) {
+              // Lógica de búsqueda aquí, por ejemplo, eventViewModel.searchEvents(query);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}*/

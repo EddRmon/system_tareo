@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class UnidadesProcesadas extends StatefulWidget {
-  const UnidadesProcesadas({super.key, required this.onFinish, required this.text});
-  final VoidCallback onFinish;
+  const UnidadesProcesadas({super.key, required this.onStart, required this.text});
+  final VoidCallback onStart;
   final String text;
 
   @override
@@ -59,16 +59,18 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Llama al callback para notificar a BotonInicioPreparacion que se presionó "FINALIZAR"
-                widget.onFinish();
-                Navigator.of(context).pop(); // Cierra solo el ModalBottomSheet
+                // Llama al callback para notificar a InicioProduccion que se presionó "INICIAR"
+                widget.onStart();
+                Navigator.of(context).pop(); // Cierra el AlertDialog
+                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop(); // Cierra el diálogo
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
-              child: const Text("FINALIZAR", style: TextStyle(fontSize: 11, color: Colors.white,),textAlign: TextAlign.center),
+              child:  const Text("FINALIZAR", style:   TextStyle(fontSize: 11, color: Colors.white),textAlign: TextAlign.center,),
             ),
           ],
         ),

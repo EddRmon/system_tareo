@@ -4,16 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_tareo/views/unidades_procesadas.dart';
 
 class BotonInicioPreparacion extends StatefulWidget {
-  const BotonInicioPreparacion({super.key, required this.texto, this.initialIsProducing = false});
+  const BotonInicioPreparacion({super.key, required this.texto});
   final String texto;
-  final bool initialIsProducing; // Parámetro opcional para inicializar isProducing
-
+  
   @override
   State<BotonInicioPreparacion> createState() => _BotonInicioPreparacionState();
 }
 
 class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
-  bool isProducing = false; // Estado para controlar si está produciendo o no
+  bool isProducing = false; 
+ // Estado para controlar si está produciendo o no
   Stream<String> getHoraStream() {
     return Stream.periodic(const Duration(seconds: 1), (_) {
       return DateFormat('hh:mm:ss a').format(DateTime.now());
@@ -24,25 +24,20 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
   void initState() {
     super.initState();
     _loadState(); // Cargar el estado persistente al iniciar
-    // Si initialIsProducing es true, forzamos isProducing a true
-    if (widget.initialIsProducing) {
-      setState(() {
-        isProducing = true;
-      });
-      _saveState(); // Guardar el estado inicial como true
-    }
   }
 
   // Método para cargar el estado desde SharedPreferences con manejo de errores
   Future<void> _loadState() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final state = prefs.getBool('isProducingEvento') ?? false; // Usamos una clave diferente para evitar conflictos
+      final state = prefs.getBool('isProducingEvento') ??
+          false; // Usamos una clave diferente para evitar conflictos
       setState(() {
         isProducing = state;
       });
     } catch (e) {
-      print('Error al cargar el estado de BotonInicioPreparacion: $e');
+      // ignore: avoid_print
+      print('Error al cargar el estado de BotonInicioEvento: $e');
       // Si ocurre un error, mantenemos el valor predeterminado (false)
     }
   }
@@ -51,22 +46,24 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
   Future<void> _saveState() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isProducingEvento', isProducing); // Usamos una clave diferente
+      await prefs.setBool(
+          'isProducingEvento', isProducing); // Usamos una clave diferente
     } catch (e) {
-      print('Error al guardar el estado de BotonInicioPreparacion: $e');
+      // ignore: avoid_print
+      print('Error al guardar el estado de BotonInicioEvento: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         if (isProducing) {
-          return false; // Bloquea la navegación hacia atrás si está en modo "FINALIZAR"
+          return false;
         }
-        isProducing = false; // Resetear a false si se sale en modo "INICIAR"
-        _saveState(); // Guardar el cambio a false
+        isProducing = false;
         return true;
       },
       child: Scaffold(
@@ -78,7 +75,8 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
               SizedBox(height: size.height * 0.35),
               // Información del usuario
               const Row(
-                mainAxisAlignment: MainAxisAlignment.center, // Centrar el contenido horizontalmente
+                mainAxisAlignment: MainAxisAlignment
+                    .center, // Centrar el contenido horizontalmente
                 children: [
                   Column(
                     children: [
@@ -94,7 +92,8 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
                       children: [
                         Text(
                           "Ricardo Monago",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           "Turno: Mañana",
@@ -105,32 +104,44 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
                   ),
                 ],
               ),
+              
               const SizedBox(height: 20),
-              // Botón dinámico (FINALIZAR, ya que siempre inicia en rojo si viene de PreparacionScreen)
+              // Botón dinámico (Iniciar/Finalizar)
               Center(
                 child: ElevatedButton(
-                  onPressed: isProducing
-                      ? () {
-                          // Mostrar el ModalBottomSheet con UnidadesProcesadas cuando se presiona "FINALIZAR"
-                          _showUnidadesProcesadasDialog(
-                            context,
-                            () {
-                              // Callback para resetear el estado cuando se presiona "FINALIZAR" en el diálogo
-                              setState(() {
-                                isProducing = false; // Volver a verde (aunque no lo usaremos aquí, por diseño)
-                              });
-                              _saveState(); // Guardar el cambio a false
-                            },
-                          );
-                        }
-                      : null, // Deshabilitar el botón si no está produciendo (aunque no debería ocurrir en este flujo)
+                  onPressed: () {
+                    setState(() {
+                      if (isProducing) {
+                        // Mostrar el AlertDialog con UnidadesProcesadas cuando se presiona "Finalizar"
+                        _showUnidadesProcesadasDialog(
+                          context,
+                          () {
+                            // Callback para resetear el estado cuando se presiona "INICIAR" en el diálogo
+                            setState(() {
+                              isProducing =
+                                  false; // Volver a verde con el texto original
+                            });
+                            _saveState(); // Guardar el cambio a false
+                          },
+                        );
+                      } else {
+                        isProducing =
+                            true; // Cambiar a estado de producción (rojo con "FINALIZAR")
+                        _saveState(); // Guardar el cambio a true
+                      }
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red, // Siempre rojo al iniciar desde PreparacionScreen
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    backgroundColor: isProducing ? Colors.red : Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                   child: Text(
-                    'FINALIZAR ${widget.texto}',
+                    isProducing
+                        ? 'FINALIZAR ${widget.texto}'
+                        : 'INICIAR: ${widget.texto}',
                     style: const TextStyle(fontSize: 14, color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
@@ -141,17 +152,17 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
                 height: 60,
                 width: 120,
                 decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(8),
-                  shape: BoxShape.rectangle,
-                ),
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(8),
+                    shape: BoxShape.rectangle),
                 child: Center(
                   child: StreamBuilder<String>(
                     stream: getHoraStream(),
                     builder: (context, snapshot) {
                       return Text(
                         snapshot.data ?? '',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       );
                     },
                   ),
@@ -164,16 +175,19 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
     );
   }
 
-  // Método para mostrar el ModalBottomSheet con el contenido de UnidadesProcesadas, pasando un callback
-  void _showUnidadesProcesadasDialog(BuildContext context, VoidCallback onFinish) {
+  // Método para mostrar el AlertDialog con el contenido de UnidadesProcesadas, pasando un callback
+  void _showUnidadesProcesadasDialog(
+      BuildContext context, VoidCallback onStart) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+        final isLandscape =
+            MediaQuery.of(context).orientation == Orientation.landscape;
         final size = MediaQuery.of(context).size;
         return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
             height: isLandscape ? size.height * 0.6 : size.height * 0.7,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -183,19 +197,34 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
                   children: [
                     const Text('Unidades Procesadas'),
                     SizedBox(
-                      width: double.maxFinite,
-                      child: UnidadesProcesadas(onFinish: onFinish, text: widget.texto),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Cierra el ModalBottomSheet
-                      },
-                      child: const Text('Cerrar'),
-                    ),
+              width: double.maxFinite,
+              child: UnidadesProcesadas(onStart: onStart, text: widget.texto,),),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cierra el diálogo
+                  
+                },
+                child: const Text('Cerrar'),
+              ),
                   ],
                 ),
               ),
             ),
+
+            /*title: const Text('Unidades Procesadas'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: UnidadesProcesadas(onStart: onStart, text: widget.texto,), // Pasamos el callback a UnidadesProcesadas
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cierra el diálogo
+                  
+                },
+                child: const Text('Cerrar'),
+              ),
+            ],*/
           ),
         );
       },
