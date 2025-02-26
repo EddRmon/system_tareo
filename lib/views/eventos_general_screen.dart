@@ -1,9 +1,7 @@
 // lib/views/eventos_general_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:system_tareo/views/navegacion/boton_inicio_evento.dart';
-
-
+import 'package:system_tareo/views/navegacion/tipos_eventos/boton_padre_eventogeneral.dart';
 import 'package:system_tareo/viewsmodel/event_viewmodel.dart';
 import 'package:system_tareo/widgets/search_bar_widget.dart';
 
@@ -29,7 +27,7 @@ class EventosGeneralContent extends StatelessWidget {
     final eventViewModel = Provider.of<EventViewModel>(context);
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -37,10 +35,10 @@ class EventosGeneralContent extends StatelessWidget {
             children: [
               const Text(
                 'Eventos',
-                style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const Divider(color: Colors.black),
+              //const Divider(color: Colors.black),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: SearchBarWidget(), // Widget reutilizable para el buscador
@@ -63,13 +61,7 @@ class EventosGeneralContent extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BotonInicioEvento(texto: item.text),
-                            ),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Seleccionaste: ${item.text}"),
-                              duration: const Duration(seconds: 2),
+                              builder: (context) => BotonPadreEventogeneral(texto: item.text),
                             ),
                           );
                         },

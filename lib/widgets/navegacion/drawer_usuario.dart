@@ -13,14 +13,13 @@ class DrawerUsuario extends StatelessWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(color:  Color.fromARGB(255, 38, 50, 56)),
-            child: Column(
+            child: Row(
               children: [
                 CircleAvatar(
-                  radius: 30,
                   backgroundImage: NetworkImage(
                       'https://media.licdn.com/dms/image/v2/C4E03AQEdSK4YkDhv0w/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1658904251136?e=2147483647&v=beta&t=_O6mtTA6_7TPfhr8mpnBwJuYPze-590YZM9T4w8Hr6k'),
                 ),
-                SizedBox(height: 10),
+                SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

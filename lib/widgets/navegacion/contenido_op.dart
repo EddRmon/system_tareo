@@ -8,14 +8,16 @@ class ContenidoOp extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return ColoredBox(
-      color:  Colors.white,
+      color: Colors.white,
       child: SizedBox(
         height: size.height * 0.7,
         child: ListView.builder(
           itemCount: 6,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10,),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
               child: Card(
                 elevation: 1,
                 color: const Color.fromARGB(255, 243, 245, 245),
@@ -23,13 +25,35 @@ class ContenidoOp extends StatelessWidget {
                 child: ListTile(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const TiposEventos()));
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            const TiposEventos(),
+                        transitionDuration: const Duration(milliseconds: 350),
+                        transitionsBuilder:
+                            (context, animation, animationSecondary, child) {
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(1.0, 0.0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+
                   },
                   title: Text('OP ${index + 168146}'),
                   subtitle: const Text("Estado: Pendiente"),
-                  leading: const CircleAvatar(backgroundImage: NetworkImage('https://studioa.pe/wp-content/uploads/2021/04/studioa_alicorp_branding_logo.png', scale: 1.0),),
+                  leading: const CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://studioa.pe/wp-content/uploads/2021/04/studioa_alicorp_branding_logo.png',
+                        scale: 1.0),
+                  ),
                   trailing: Card(
                     elevation: 4,
                     color: const Color.fromARGB(255, 22, 56, 78),

@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 
-class UnidadesProcesadas extends StatefulWidget {
-  const UnidadesProcesadas({super.key, required this.onFinish, required this.text});
-  final VoidCallback onFinish;
-  final String text;
-
+class AlertaProcesoTerminado extends StatefulWidget {
+  const AlertaProcesoTerminado({super.key, required this.onStart});
+final VoidCallback onStart; // Callback para notificar cuando se presiona "INICIAR"
+  
   @override
-  State<UnidadesProcesadas> createState() => _UnidadesProcesadasState();
+  State<AlertaProcesoTerminado> createState() => _AlertaProcesoTerminadoState();
 }
 
-class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
-  final TextEditingController piegosParcialesMalosController = TextEditingController();
+class _AlertaProcesoTerminadoState extends State<AlertaProcesoTerminado> {
+  final TextEditingController cantidadController = TextEditingController();
+
   final TextEditingController obsController = TextEditingController();
-  final TextEditingController piegosParcialesController = TextEditingController();
 
   String tipoCaja = "Seleccionar";
+
   String causaSeleccionada = "Seleccionar Causa";
+
   String seccionSeleccionada = "Seleccionar Sección";
 
   @override
   void dispose() {
     super.dispose();
-    piegosParcialesMalosController.dispose();
-    obsController.dispose();
-    piegosParcialesController.dispose();
+    cantidadController.dispose();
   }
 
   @override
@@ -51,24 +50,38 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
               ),
             ),
             const SizedBox(height: 10),
+            SizedBox(
+              width: size.width * 0.9,
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: causaSeleccionada,
+                items: ["Seleccionar Causa", "Causa 1", "Causa 2", "Causa 3"].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value, style: const TextStyle(fontSize: 12)),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) => setState(() => causaSeleccionada = newValue ?? "Seleccionar Causa"),
+              ),
+            ),
+            const SizedBox(height: 10),
             _buildTextField("Observaciones", obsController, isNumeric: true),
+          
             const SizedBox(height: 10),
-            _buildTextField("Pliegos malos", piegosParcialesMalosController, isNumeric: true),
-            const SizedBox(height: 10),
-            _buildTextField("Piegos parciales", piegosParcialesController, isNumeric: true),
+            _buildTextField("Cantidad", cantidadController, isNumeric: true),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Llama al callback para notificar a BotonInicioPreparacion que se presionó "FINALIZAR"
-                widget.onFinish();
-                Navigator.of(context).pop(); // Cierra solo el ModalBottomSheet
+                // Llama al callback para notificar a InicioProduccion que se presionó "INICIAR"
+                widget.onStart();
+                Navigator.of(context).pop(); // Cierra el AlertDialog
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
-              child: const Text("FINALIZAR", style: TextStyle(fontSize: 11, color: Colors.white,),textAlign: TextAlign.center),
+              child: const Text("FINALIZAR", style:   TextStyle(fontSize: 14, color: Colors.white),),
             ),
           ],
         ),

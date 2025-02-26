@@ -10,20 +10,30 @@ class SearchBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final eventViewModel = Provider.of<EventViewModel>(context, listen: false);
-    return TextField(
-      decoration: InputDecoration(
-        hintText: 'Buscar eventos...',
-        prefixIcon: const Icon(Icons.search),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+    final size = MediaQuery.of(context).size;
+    return SizedBox(
+      width: size.width,
+      height: 40,
+      child: TextField(
+        style: const TextStyle(fontSize: 12),
+        textAlignVertical: TextAlignVertical.center,
+        decoration: InputDecoration(
+          hintText: 'Buscar eventos...',
+          hintStyle: const TextStyle(fontSize: 12, color: Colors.grey),
+          prefixIcon: const Icon(Icons.search, size: 18),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          filled: true,
+          fillColor: const Color.fromARGB(255, 236, 236, 236),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         ),
-        filled: true,
-        fillColor: const Color.fromARGB(255, 236, 236, 236),
+        onChanged: (query) {
+          eventViewModel.searchEvents(query);
+        },
+        
       ),
-      onChanged: (query) {
-        eventViewModel.searchEvents(query);
-      },
-      
     );
   }
 }
+

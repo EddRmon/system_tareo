@@ -17,12 +17,13 @@ class _BuscarOpPendienteState extends State<BuscarOpPendiente> {
   @override
   Widget build(BuildContext context) {
    // final size = MediaQuery.of(context).size;
-
+   
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Cabecera de la pagina principal
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextField(
@@ -37,6 +38,7 @@ class _BuscarOpPendienteState extends State<BuscarOpPendiente> {
                 ),
               ),
             ),
+            // Cuerpo de la vista
             const ContenidoOp(),
            
             
