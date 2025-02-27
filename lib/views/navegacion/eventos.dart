@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:system_tareo/views/eventos_general_screen.dart';
@@ -62,6 +63,13 @@ class _TiposEventosState extends State<TiposEventos> {
     _pageController.dispose();
     super.dispose();
   }
+  Future<void> _saveTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final  now = DateTime.now();
+    final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+    await prefs.setString('savedTime', formattedTime);
+    
+  }
 
   // Método para cargar el estado desde SharedPreferences con manejo de errores
   Future<void> _loadState() async {
@@ -93,9 +101,12 @@ class _TiposEventosState extends State<TiposEventos> {
           style: TextStyle(
             fontSize: size.width > 600 ? 28 : 24,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color:  Colors.white,
+            fontFamily: 'Times New Roman'
           ),
         ),
+        backgroundColor: const Color.fromARGB(221, 193, 193, 216),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: Colors.grey[50],
       body: Column(
@@ -141,6 +152,7 @@ class _TiposEventosState extends State<TiposEventos> {
                                 }));
                       } else if (evento['produccion'] == true) {
                         ///////// ///////// ///////// ///////// ///////// Produccion///////// ///////// ///////// ///////// ///////// ///////// 
+                        _saveTime();
                         Navigator.push( 
                           context,
                           PageRouteBuilder(

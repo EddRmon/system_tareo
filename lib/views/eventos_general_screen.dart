@@ -1,13 +1,20 @@
 // lib/views/eventos_general_screen.dart
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_tareo/views/navegacion/tipos_eventos/boton_padre_eventogeneral.dart';
 import 'package:system_tareo/viewsmodel/event_viewmodel.dart';
 import 'package:system_tareo/widgets/search_bar_widget.dart';
 
-class EventosGeneralScreen extends StatelessWidget {
+class EventosGeneralScreen extends StatefulWidget {
   const EventosGeneralScreen({super.key});
 
+  @override
+  State<EventosGeneralScreen> createState() => _EventosGeneralScreenState();
+}
+
+class _EventosGeneralScreenState extends State<EventosGeneralScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -17,9 +24,23 @@ class EventosGeneralScreen extends StatelessWidget {
   }
 }
 
-class EventosGeneralContent extends StatelessWidget {
+class EventosGeneralContent extends StatefulWidget {
   const EventosGeneralContent({super.key});
 
+  @override
+  State<EventosGeneralContent> createState() => _EventosGeneralContentState();
+}
+
+class _EventosGeneralContentState extends State<EventosGeneralContent> {
+
+  Future<void> _saveTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final  now = DateTime.now();
+    final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+    await prefs.setString('savedTime', formattedTime);
+    
+  }
+  
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -33,12 +54,13 @@ class EventosGeneralContent extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           child: Column(
             children: [
+              const Divider(color: Colors.grey),
               const Text(
                 'Eventos',
                 style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              //const Divider(color: Colors.black),
+              const Divider(color: Colors.grey),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: SearchBarWidget(), // Widget reutilizable para el buscador
@@ -58,6 +80,7 @@ class EventosGeneralContent extends StatelessWidget {
                       final item = eventViewModel.events[index];
                       return InkWell(
                         onTap: () {
+                          _saveTime();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

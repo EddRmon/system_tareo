@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:system_tareo/views/navegacion/boton_inicio_preparacion.dart';
@@ -55,6 +56,14 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
       print('Error al cargar el estado: $e');
       // Si ocurre un error, mantenemos los valores predeterminados (false para todas las opciones)
     }
+  }
+
+  Future<void> _saveTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final  now = DateTime.now();
+    final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+    await prefs.setString('savedTime', formattedTime);
+    
   }
 
   
@@ -126,6 +135,7 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
 
     return InkWell(
       onTap: () {
+        _saveTime();
         Navigator.push(
             context,
             MaterialPageRoute(

@@ -23,6 +23,7 @@ class SearchBarWidget extends StatelessWidget {
           prefixIcon: const Icon(Icons.search, size: 18),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none
           ),
           filled: true,
           fillColor: const Color.fromARGB(255, 236, 236, 236),
