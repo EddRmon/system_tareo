@@ -33,7 +33,7 @@ class _TiposEventosState extends State<TiposEventos> {
     {
       'nombre': 'Preparación',
       'icon': Icons.build,
-      'color': Colors.blue[300],
+      'color': const Color.fromARGB(255, 100, 188, 246),
       'preparacion': true,
     },
     {
@@ -63,12 +63,12 @@ class _TiposEventosState extends State<TiposEventos> {
     _pageController.dispose();
     super.dispose();
   }
+
   Future<void> _saveTime() async {
     final prefs = await SharedPreferences.getInstance();
-    final  now = DateTime.now();
+    final now = DateTime.now();
     final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
     await prefs.setString('savedTime', formattedTime);
-    
   }
 
   // Método para cargar el estado desde SharedPreferences con manejo de errores
@@ -99,16 +99,15 @@ class _TiposEventosState extends State<TiposEventos> {
         title: Text(
           'Eventos',
           style: TextStyle(
-            fontSize: size.width > 600 ? 28 : 24,
-            fontWeight: FontWeight.bold,
-            color:  Colors.white,
-            fontFamily: 'Times New Roman'
-          ),
+              fontSize: size.width > 600 ? 28 : 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Times New Roman'),
         ),
-        backgroundColor: const Color.fromARGB(221, 193, 193, 216),
+        backgroundColor: const Color.fromARGB(255, 113, 153, 168),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color.fromARGB(255, 239, 240, 240),
       body: Column(
         children: [
           const SizedBox(
@@ -131,7 +130,7 @@ class _TiposEventosState extends State<TiposEventos> {
                     setState(() {
                       _currentPage = index; // Actualizar la página actual
                       if (evento['preparacion'] == true) {
-                        ///////// ///////// ///////// ///////// ///////// Preparacion///////// ///////// ///////// ///////// ///////// ///////// 
+                        ///////// ///////// ///////// ///////// ///////// Preparacion///////// ///////// ///////// ///////// ///////// /////////
                         Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -151,9 +150,9 @@ class _TiposEventosState extends State<TiposEventos> {
                                   );
                                 }));
                       } else if (evento['produccion'] == true) {
-                        ///////// ///////// ///////// ///////// ///////// Produccion///////// ///////// ///////// ///////// ///////// ///////// 
+                        ///////// ///////// ///////// ///////// ///////// Produccion///////// ///////// ///////// ///////// ///////// /////////
                         _saveTime();
-                        Navigator.push( 
+                        Navigator.push(
                           context,
                           PageRouteBuilder(
                               pageBuilder:
@@ -178,7 +177,7 @@ class _TiposEventosState extends State<TiposEventos> {
                               }),
                         );
                       } else if (evento['navigate'] == true) {
-                        ///////// ///////// ///////// ///////// ///////// Eventyos Generales///////// ///////// ///////// ///////// ///////// ///////// 
+                        ///////// ///////// ///////// ///////// ///////// Eventyos Generales///////// ///////// ///////// ///////// ///////// /////////
                         Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -251,10 +250,10 @@ class _TiposEventosState extends State<TiposEventos> {
               child: Text(
                 evento['nombre'],
                 style: TextStyle(
-                  fontSize: size.width > 600 ? 16 : 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                    fontSize: size.width > 600 ? 16 : 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontFamily: 'Times New Roman'),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.visible,
               ),

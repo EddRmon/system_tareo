@@ -12,7 +12,7 @@ class ContenidoOp extends StatelessWidget {
       child: SizedBox(
         height: size.height * 0.7,
         child: ListView.builder(
-          itemCount: 6,
+          itemCount: 7,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(
