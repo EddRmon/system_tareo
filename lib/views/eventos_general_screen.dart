@@ -102,7 +102,7 @@ class _EventosGeneralContentState extends State<EventosGeneralContent> {
                               child: Text(
                                 item.text,
                                 style: TextStyle(
-                                  fontSize: isLandScape ? size.height * 0.04 : size.height * 0.02,
+                                  fontSize: isLandScape ? size.height * 0.04 : size.height * 0.014,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
                                 ),

@@ -12,7 +12,9 @@ class DrawerUsuario extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
-            decoration: BoxDecoration(color:  Color.fromARGB(255, 38, 50, 56)),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 5, 124, 179),
+            ),
             child: Row(
               children: [
                 CircleAvatar(
@@ -46,7 +48,8 @@ class DrawerUsuario extends StatelessWidget {
             leading: const Icon(Icons.home),
             title: const Text('Cerrar Sesión'),
             onTap: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
             },
           ),
         ],

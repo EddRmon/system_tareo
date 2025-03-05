@@ -26,9 +26,17 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
   // Lista de opciones para Preparación
   final List<Map<String, dynamic>> preparationOptions = [
     {'icon': Icons.check_box, 'text': 'Puesta a Punto', 'color': Colors.green},
-    {'icon': Icons.settings, 'text': 'Mantenimiento', 'color': Colors.green},
-    {'icon': Icons.build, 'text': 'Revisión Técnica', 'color': Colors.green},
-    {'icon': Icons.work, 'text': 'Producción Especial', 'color': Colors.green},
+    {'icon': Icons.settings, 'text': 'Mantenimiento', 'color': Colors.orange},
+    {
+      'icon': Icons.build,
+      'text': 'Revisión Técnica',
+      'color': const Color.fromARGB(255, 103, 35, 230)
+    },
+    {
+      'icon': Icons.work,
+      'text': 'Producción Especial',
+      'color': const Color.fromARGB(255, 221, 77, 84)
+    },
   ];
 
   @override
@@ -36,7 +44,24 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
     super.initState();
     _loadState(); // Cargar el estado persistente al iniciar
   }
-  
+
+  void iniciarProceso() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('procesoPendiente', true);
+}
+
+  Future<void> _saveTimeAndState(String option) async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now();
+    final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+    
+    // Guardar hora y estado pendiente específicos para esta opción
+    await prefs.setString('savedTime_$option', formattedTime);
+    await prefs.setBool('procesoPendiente_$option', true);
+  }
+
+
+
   // Método para cargar el estado desde SharedPreferences con manejo de errores
   Future<void> _loadState() async {
     try {
@@ -60,28 +85,25 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
 
   Future<void> _saveTime() async {
     final prefs = await SharedPreferences.getInstance();
-    final  now = DateTime.now();
+    final now = DateTime.now();
     final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
     await prefs.setString('savedTime', formattedTime);
-    
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey[50], // Fondo minimalista y claro
+      // Fondo minimalista y claro
       appBar: AppBar(
-      
+        backgroundColor: Color.fromARGB(255, 5, 124, 179),
         elevation: 0, // Sin sombra para un look limpio
         title: const Text(
           'Preparación',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         leading: IconButton(
@@ -135,11 +157,12 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
 
     return InkWell(
       onTap: () {
+        
         _saveTime();
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>  BotonInicioPreparacion(
+                builder: (context) => BotonInicioPreparacion(
                       texto: text,
                     )));
       },
@@ -180,43 +203,4 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
       ),
     );
   }
-
-
 }
-
-/*
-import 'package:flutter/material.dart';
-
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SizedBox(
-          width: size.width > 360 ? 200 : 120, // Ancho responsivo
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Buscar...',
-              prefixIcon: Icon(Icons.search, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-              filled: true,
-              fillColor: const Color.fromARGB(255, 236, 236, 236),
-              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              hintStyle: const TextStyle(fontSize: 12),
-            ),
-            style: const TextStyle(fontSize: 12),
-            onChanged: (query) {
-              // Lógica de búsqueda aquí, por ejemplo, eventViewModel.searchEvents(query);
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}*/

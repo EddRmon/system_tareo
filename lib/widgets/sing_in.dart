@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:system_tareo/blocs/auth_bloc.dart';
-import 'package:system_tareo/blocs/auth_state.dart';
+import 'package:system_tareo/views/navegacion/barra_navegacion.dart';
 
 class SingIn extends StatefulWidget {
   const SingIn({super.key});
@@ -14,9 +12,19 @@ class _SingInState extends State<SingIn> {
   final TextEditingController _user = TextEditingController();
   final TextEditingController _pass = TextEditingController();
 
-  List<String> maquinas = ['BOTS 1', 'L20', 'ENTHRONE', 'S40', 'K40'];
+  List<String> maquinas = [
+    'BOTS 1',
+    'L20',
+    'ENTHRONE',
+    'S40',
+    'K40',
+    'BOTS 1',
+    
+  ];
 
   String? maquinaSeleccionada;
+ 
+
 
   @override
   void dispose() {
@@ -28,59 +36,49 @@ class _SingInState extends State<SingIn> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (BuildContext context, state) {
-        if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        }
-        if (state is Authenticated) {
-          Navigator.popAndPushNamed(context, '/barraNavegacion');
-        }
-      },
-      child: Stack(
-        children: [
-          Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: CustomPaint(
-                size: Size(size.width, size.height * 0.5),
-                painter: CurvePainter(),
-              )),
-          Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  //crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Bienvenido\n de nuevo',
-                      style: TextStyle(fontSize: 34, fontFamily: 'Times New Roman'),
-                      textAlign: TextAlign.center,
-                    ),
-                    
-                     SizedBox(
-                      height: size.height * 0.15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Scaffold(
+      body: Stack(
+          children: [
+            Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: CustomPaint(
+                  size: Size(size.width, size.height * 0.5),
+                  painter: CurvePainter(),
+                )),
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      //crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        const Text(
+                          'Bienvenido\n de nuevo',
+                          style: TextStyle(
+                              fontSize: 34, fontFamily: 'Times New Roman'),
+                          textAlign: TextAlign.center,
+                        ),
                         SizedBox(
-                          width:
-                              size.width > 360 ? 200 : 180, // Ancho responsivo
+                          height: size.height * 0.15,
+                        ),
+                        SizedBox(
+                          width: size.width > 360 ? 600 : 500, // Ancho responsivo
                           child: TextField(
                             controller: _user,
                             keyboardType: TextInputType.number,
                             style: const TextStyle(fontSize: 12),
                             decoration: InputDecoration(
                                 hintText: 'Usuario',
-                                hintStyle: const TextStyle(fontFamily: 'Times New Roman'),
-                                prefixIcon: const Icon(Icons.mail_outline, ),
+                                hintStyle:
+                                    const TextStyle(fontFamily: 'Times New Roman'),
+                                prefixIcon: const Icon(
+                                  Icons.mail_outline,
+                                ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: BorderSide.none),
@@ -89,29 +87,19 @@ class _SingInState extends State<SingIn> {
                                     const Color.fromARGB(255, 228, 225, 225)),
                           ),
                         ),
-                        comboBoxMaquina('MAQUINA',maquinas, maquinaSeleccionada, (String? valor){
-                          setState(() {
-                            maquinaSeleccionada = valor;
-                          });
-                        })
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
                         SizedBox(
-                          width:
-                              size.width > 360 ? 200 : 180, // Ancho responsivo
+                          width: size.width > 360 ? 600 : 500, // Ancho responsivo
                           child: TextField(
                             controller: _pass,
                             obscureText: true,
                             style: const TextStyle(fontSize: 12),
                             decoration: InputDecoration(
                                 hintText: 'Contraseña',
-                                hintStyle: const TextStyle(fontFamily: 'Times New Roman'),
+                                hintStyle:
+                                    const TextStyle(fontFamily: 'Times New Roman'),
                                 prefixIcon: const Icon(Icons.lock_outlined),
                                 suffixIcon:
                                     const Icon(Icons.visibility_off_outlined),
@@ -123,71 +111,88 @@ class _SingInState extends State<SingIn> {
                                     const Color.fromARGB(255, 228, 225, 225)),
                           ),
                         ),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        comboBoxMaquina('MAQUINA', maquinas, maquinaSeleccionada,
+                            (String? valor) {
+                          setState(() {
+                            maquinaSeleccionada = valor;
+                          });
+                        }),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: size.width,
+                          child: MaterialButton(
+                            height: 45,
                             onPressed: () {
                               //final username = _user.text;
                               // final password = _pass.text;
                               // final conver = int.parse(username);
                               // context.read<AuthBloc>().add(LoginRequested(username: conver, password: password)) ;
-                              Navigator.popAndPushNamed(
-                                  context, '/barraNavegacion');
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> const BarraNavegacion()));
                             },
-                            child: const SizedBox(
-                              height: 50,
-                              width: 75,
-                              child: Center(
-                                child: Text(
-                                  'Sign in',
-                                  style: TextStyle(color: Colors.white, fontFamily: 'Times New Roman'), 
-                                ),
-                              ),
-                            )),
+                            color: Colors.black,
+                            child: const Text(
+                              'Sign in',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Times New Roman'),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ],
+        ),
     );
   }
-  Widget comboBoxMaquina(String texto, List<String> maquinas, String? valor, ValueChanged<String?> cambiar){
+
+  Widget comboBoxMaquina(String texto, List<String> maquinas, String? valor,
+      ValueChanged<String?> cambiar) {
     final size = MediaQuery.of(context).size;
     return SizedBox(
-      width: size.width * 0.34,
+      width: size.width,
       height: 50,
-      child: DropdownButtonFormField(
+      child: DropdownButtonFormField<String>(
+        menuMaxHeight: 300,
         onChanged: cambiar,
-        items: maquinas.map((String maquina){
+        items: maquinas.map((String maquina) {
           return DropdownMenuItem(
-            value:maquina ,
-            child: Text(maquina, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black),));
+              value: maquina,
+              child: Text(
+                maquina,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: Colors.black),
+              ));
         }).toList(),
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color:Colors.grey, width: 1.0),
-            ),
-            labelText: texto,
-              labelStyle: const TextStyle(
-                fontSize: 13,
-                color: Colors.grey,
-              ),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+          ),
+          labelText: texto,
+          labelStyle: const TextStyle(
+            fontSize: 13,
+            color: Colors.grey,
+          ),
         ),
         focusColor: Colors.white,
-        
-      
       ),
     );
   }
@@ -197,7 +202,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Colors.blueGrey
+      ..color = const Color.fromARGB(255, 5, 124, 179)
       ..style = PaintingStyle.fill;
     Path path = Path()
       ..moveTo(0, size.width)

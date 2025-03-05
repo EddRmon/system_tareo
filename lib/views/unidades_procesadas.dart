@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UnidadesProcesadas extends StatefulWidget {
   const UnidadesProcesadas({super.key, required this.onFinish, required this.text});
@@ -25,6 +26,10 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
     obsController.dispose();
     piegosParcialesController.dispose();
   }
+  void finalizarProceso() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('procesoPendiente', false); // Marca como finalizado
+}
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +87,7 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(onPressed: (){
+                  finalizarProceso();
                   Navigator.pop(context);
                 }, child: const Text('Cerrar'))
               ],

@@ -6,13 +6,7 @@ import 'package:system_tareo/widgets/navegacion/drawer_usuario.dart';
 
 class BarraNavegacion extends StatelessWidget {
   const BarraNavegacion({super.key});
-/*
-  // Función que devuelve un Stream con la hora actualizada cada segundo
-  Stream<String> getHoraStream() {
-    return Stream.periodic(const Duration(seconds: 1), (_) {
-      return DateFormat('hh:mm:ss a').format(DateTime.now());
-    });
-  }*/
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,47 +19,35 @@ class BarraNavegacion extends StatelessWidget {
          },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Tareo'),
+            title: const Text('Tareo', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w700),),
             bottom: const TabBar(
-              labelStyle: TextStyle(fontSize: 15),
+              unselectedLabelColor: Colors.black,
+              labelStyle: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
               indicatorPadding: EdgeInsets.zero,
+              indicatorColor: Colors.black,
+              
               tabs: [
-                Tab(text: "Pendiente"),
+                //Tab(text: "Inicio"),
+                Tab(text: "Ops"),
                 Tab(text: "Registro"),
                 Tab(text: "Stock"),
+                
               ],
             ),
+            actions: const [ CircleAvatar(backgroundImage: NetworkImage('https://media.licdn.com/dms/image/v2/C4E03AQEdSK4YkDhv0w/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1658904251136?e=2147483647&v=beta&t=_O6mtTA6_7TPfhr8mpnBwJuYPze-590YZM9T4w8Hr6k'),),SizedBox(width: 8,)],
+            backgroundColor: const Color.fromARGB(255, 5, 124, 179),
           ),
           drawer: const DrawerUsuario(),
           body: const TabBarView(
             children: [
+              //VistaInicio(),
               BuscarOpPendiente(),
               RegistroActividades(),
               StockAlmacen(),
+              
             ],
           ),
-         /* floatingActionButton: Container(
-            height: 60,
-            width: 120,
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(8),
-              shape: BoxShape.rectangle
-            ),
-            
-            child: Center(
-              child: StreamBuilder<String>(
-                stream: getHoraStream(),
-                builder: (context, snapshot) {
-                  return Text(
-                    snapshot.data ?? '',
-                    style:
-                        const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  );
-                },
-              ),
-            ),
-          ),*/
+        
         ),
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:system_tareo/views/eventos_general_screen.dart';
 import 'package:system_tareo/views/navegacion/boton_padre_produccion.dart';
 import 'package:system_tareo/views/navegacion/preparacion_screen.dart';
@@ -14,48 +13,37 @@ class TiposEventos extends StatefulWidget {
 }
 
 class _TiposEventosState extends State<TiposEventos> {
-  String? selectedPreparationOption; // Opción seleccionada de Preparación
-  bool showPreparationOptions =
-      false; // Estado para mostrar las opciones de Preparación
-  bool showProductionContent =
-      false; // Estado para mostrar el contenido de Producción
-  int _currentPage = 0; // Variable para rastrear la página actual
+  int _currentPage = 0;
+  late PageController _pageController;
+  bool _mostrarLista = false; // Estado para alternar entre lista y grid
 
-  // Mapa para rastrear el estado de cada opción de preparación (iniciada o terminada)
-  final Map<String, bool> preparationOptionStates = {
-    'Puesta a Punto': false,
-    'Mantenimiento': false,
-    'Revisión Técnica': false,
-    'Producción Especial': false,
-  };
+  
 
   final List<Map<String, dynamic>> eventos = [
     {
       'nombre': 'Preparación',
       'icon': Icons.build,
-      'color': const Color.fromARGB(255, 100, 188, 246),
-      'preparacion': true,
+      'color': Colors.blue,
+      'preparacion': true
     },
     {
       'nombre': 'Producción',
       'icon': Icons.factory,
-      'color': Colors.green[400],
-      'produccion': true,
+      'color': Colors.green,
+      'produccion': true
     },
     {
       'nombre': 'Eventos Generales',
       'icon': Icons.event,
-      'color': Colors.teal[300],
-      'navigate': true,
+      'color': Colors.teal,
+      'navigate': true
     },
   ];
 
-  late PageController _pageController; // Controlador para el PageView
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(); // Inicializar el PageController
-    _loadState(); // Cargar el estado persistente al iniciar
+    _pageController = PageController();
   }
 
   @override
@@ -67,207 +55,234 @@ class _TiposEventosState extends State<TiposEventos> {
   Future<void> _saveTime() async {
     final prefs = await SharedPreferences.getInstance();
     final now = DateTime.now();
-    final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
-    await prefs.setString('savedTime', formattedTime);
-  }
-
-  // Método para cargar el estado desde SharedPreferences con manejo de errores
-  Future<void> _loadState() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final state = prefs.getString('preparationOptionStates');
-      if (state != null) {
-        final Map<String, dynamic> decodedState =
-            Map<String, dynamic>.from(jsonDecode(state));
-        setState(() {
-          preparationOptionStates.clear();
-          decodedState.forEach((key, value) {
-            preparationOptionStates[key] = value as bool;
-          });
-        });
-      }
-    } catch (e) {
-      print('Error al cargar el estado: $e');
-    }
+    await prefs.setString(
+        'savedTime', DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Eventos',
-          style: TextStyle(
-              fontSize: size.width > 600 ? 28 : 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontFamily: 'Times New Roman'),
-        ),
-        backgroundColor: const Color.fromARGB(255, 113, 153, 168),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      backgroundColor: const Color.fromARGB(255, 239, 240, 240),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 90,
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          /// SliverAppBar con imagen de fondo
+          SliverAppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: const Text('Eventos',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white)),
+              background: Image.network(
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqemOVOTgtrtRoQNkL27_oQyO40CSA7p4ozw&s',
+                fit: BoxFit.cover,
+              ),
+            ),
+            backgroundColor: const Color.fromARGB(255, 113, 153, 168),
           ),
-          Expanded(
-            child: GridView.builder(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: size.width > 600 ? 3 : 1,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: size.width > 600 ? 1.2 : 2.4,
-                ),
-                itemCount: eventos.length,
-                itemBuilder: (context, index) {
-                  final evento = eventos[index];
-                  return _buildEventCard(evento, size, index == _currentPage,
-                      () {
+
+          /// Botones para cambiar entre SliverList y GridView
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    iconSize: 30,
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    onPressed: (){setState(() {
+                        _mostrarLista = false; // Mostrar GridView
+                      });}, icon: const Icon(Icons.grid_view)),
+                  const SizedBox(width: 10,),
+                  IconButton(
+                    iconSize: 30,
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+                    onPressed: (){
+                    
                     setState(() {
-                      _currentPage = index; // Actualizar la página actual
-                      if (evento['preparacion'] == true) {
-                        ///////// ///////// ///////// ///////// ///////// Preparacion///////// ///////// ///////// ///////// ///////// /////////
-                        Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        const PreparacionScreen(),
-                                transitionDuration:
-                                    const Duration(milliseconds: 350),
-                                transitionsBuilder:
-                                    (context, animation, secondary, child) {
-                                  return SlideTransition(
-                                    position: Tween<Offset>(
-                                            begin: const Offset(1.0, 0.0),
-                                            end: Offset.zero)
-                                        .animate(animation),
-                                    child: child,
-                                  );
-                                }));
-                      } else if (evento['produccion'] == true) {
-                        ///////// ///////// ///////// ///////// ///////// Produccion///////// ///////// ///////// ///////// ///////// /////////
-                        _saveTime();
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const BotonPadreProduccion(
-                                        texto: 'produccion',
-                                      ),
-                              transitionDuration:
-                                  const Duration(milliseconds: 350),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return SlideTransition(
-                                  position: Tween<Offset>(
-                                          begin: const Offset(1.0, 0.0),
-                                          end: Offset.zero)
-                                      .animate(animation),
-                                  child: FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                                );
-                              }),
-                        );
-                      } else if (evento['navigate'] == true) {
-                        ///////// ///////// ///////// ///////// ///////// Eventyos Generales///////// ///////// ///////// ///////// ///////// /////////
-                        Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const EventosGeneralScreen(),
-                              transitionDuration:
-                                  const Duration(milliseconds: 350),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return SlideTransition(
-                                  position: Tween<Offset>(
-                                          begin: const Offset(1.0, 0.0),
-                                          end: Offset.zero)
-                                      .animate(animation),
-                                  child: FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                                );
-                              },
-                            ));
-                      }
-                    });
-                  });
-                }),
+                        _mostrarLista = true; // Mostrar SliverList
+                      });
+                  }, icon: const Icon(Icons.list)),
+                  
+                ],
+              ),
+            ),
           ),
+
+          /// Contenedor de los eventos (GridView o SliverList según el estado)
+          _mostrarLista ? _buildSliverList(size) : _buildSliverGrid(size),
         ],
       ),
     );
   }
 
+  /// Construcción del SliverGrid
+  Widget _buildSliverGrid(Size size) {
+    return SliverPadding(
+      padding: const EdgeInsets.all(20),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: size.width > 600 ? 3 : 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 1.2,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final evento = eventos[index];
+            return _buildEventCard(evento, size, index == _currentPage, () {
+              _navigateToEvent(evento);
+            });
+          },
+          childCount: eventos.length,
+        ),
+      ),
+    );
+  }
+
+  /// Construcción del SliverList
+  Widget _buildSliverList(Size size) {
+  return SliverList(
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          child: GestureDetector(
+            onTap: () {}, 
+            child: Card(
+              elevation: 4,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(color: Colors.green, width: 1.5),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildInfoRow(
+                      icon: Icons.numbers,
+                      label: "OP",
+                      value: "${index + 164331}",
+                      color: Colors.black87,
+                    ),
+                    const Divider(),
+                    _buildInfoRow(
+                      icon: Icons.assignment,
+                      label: "Estado",
+                      value: "Generado",
+                      color: Colors.blueAccent,
+                    ),
+                    const Divider(),
+                    _buildInfoRow(
+                      icon: Icons.numbers,
+                      label: "OP",
+                      value: "164859",
+                      color: Colors.black ,
+                    ),
+                    const Divider(),
+                    _buildInfoRow(
+                      icon: Icons.assignment,
+                      label: "Estado",
+                      value: "Finalizado",
+                      color: Colors.orange,
+                    ),
+                    const Divider(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      childCount: 1, // Cambia esto según la cantidad de elementos que desees mostrar
+    ),
+  );
+}
+
+Widget _buildInfoRow({required IconData icon, required String label, required String value, Color? color}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Icon(icon, color: color ?? Colors.black54, size: 20),
+        const SizedBox(width: 8),
+        Text(
+          "$label: ",
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(fontSize: 14, color: color ?? Colors.black87),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+  /// Construcción de cada tarjeta en el GridView
   Widget _buildEventCard(Map<String, dynamic> evento, Size size,
       bool isSelected, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(12),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              evento['color'].withOpacity(isSelected ? 0.9 : 0.7),
-              evento['color'].withOpacity(isSelected ? 1.0 : 0.8),
-            ],
-          ),
+          color: evento['color'].withOpacity(isSelected ? 0.9 : 0.7),
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              blurRadius: 6,
-              offset: const Offset(0, 3),
-            ),
-          ],
+          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6)],
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              evento['icon'],
-              color: Colors.white,
-              size: size.width > 600 ? 24 : 28,
+            Icon(evento['icon'], color: Colors.white, size: 40),
+            const SizedBox(height: 10),
+            Text(
+              evento['nombre'],
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                evento['nombre'],
-                style: TextStyle(
-                    fontSize: size.width > 600 ? 16 : 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontFamily: 'Times New Roman'),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.visible,
-              ),
-            ),
-            const SizedBox(width: 6),
-            if (isSelected)
-              const Icon(
-                Icons.check_circle,
-                color: Colors.white,
-                size: 20,
-              ),
           ],
         ),
       ),
+    );
+  }
+
+  void _navigateToEvent(Map<String, dynamic> evento) {
+    if (evento['preparacion'] == true) {
+      Navigator.push(context, _slideTransition(const PreparacionScreen()));
+    } else if (evento['produccion'] == true) {
+      _saveTime();
+      Navigator.push(
+          context, _slideTransition(const BotonPadreProduccion(texto: 'produccion')));
+    } else if (evento['navigate'] == true) {
+      Navigator.push(context, _slideTransition(const EventosGeneralScreen()));
+    }
+  }
+  PageRouteBuilder _slideTransition(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: const Duration(milliseconds: 350),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position:
+              Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                  .animate(animation),
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      },
     );
   }
 }
