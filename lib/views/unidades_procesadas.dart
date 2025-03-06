@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UnidadesProcesadas extends StatefulWidget {
   const UnidadesProcesadas({super.key, required this.onFinish, required this.text});
-  final VoidCallback onFinish; // Cambié onStart por onFinish para consistencia
+  final VoidCallback onFinish;
   final String text;
 
   @override
@@ -21,25 +21,27 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
 
   @override
   void dispose() {
-    super.dispose();
     piegosParcialesMalosController.dispose();
     obsController.dispose();
     piegosParcialesController.dispose();
+    super.dispose();
   }
+
   void finalizarProceso() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('procesoPendiente', false); // Marca como finalizado
-}
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('procesoPendiente', false);
+    await prefs.setInt('circleColor', Colors.green.value); // Volver a verde al finalizar
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(8.0), // Padding reducido para el ModalBottomSheet
+      padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min, // Minimiza la altura del Column
+          mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 10),
             SizedBox(
@@ -48,10 +50,7 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
                 isExpanded: true,
                 value: tipoCaja,
                 items: ["Seleccionar", "Tipo A", "Tipo B", "Tipo C"].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value, style: const TextStyle(fontSize: 12)),
-                  );
+                  return DropdownMenuItem<String>(value: value, child: Text(value, style: const TextStyle(fontSize: 12)));
                 }).toList(),
                 onChanged: (String? newValue) => setState(() => tipoCaja = newValue ?? "Seleccionar"),
               ),
@@ -68,30 +67,28 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Llama al callback para notificar al padre que se presionó "FINALIZAR"
-                widget.onFinish();
-                Navigator.of(context).pop(); // Cierra solo el ModalBottomSheet
+                finalizarProceso(); // Marcar como finalizado y volver a verde
+                widget.onFinish(); // Notificar al padre
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
-              child: const Text(
-                "FINALIZAR",
-                style: TextStyle(fontSize: 11, color: Colors.white, ),
-                textAlign: TextAlign.center,
-              ),
+              child: const Text("FINALIZAR", style: TextStyle(fontSize: 11, color: Colors.white), textAlign: TextAlign.center),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){
-                  finalizarProceso();
-                  Navigator.pop(context);
-                }, child: const Text('Cerrar'))
+                TextButton(
+                  onPressed: () {
+                    finalizarProceso();
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cerrar'),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

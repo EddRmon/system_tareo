@@ -5,7 +5,8 @@ import 'package:system_tareo/views/navegacion/stock_almacen.dart';
 import 'package:system_tareo/widgets/navegacion/drawer_usuario.dart';
 
 class BarraNavegacion extends StatelessWidget {
-  const BarraNavegacion({super.key});
+  const BarraNavegacion({super.key, required this.maquina});
+  final String? maquina;
 
 
   @override

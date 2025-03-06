@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:system_tareo/views/navegacion/boton_inicio_preparacion.dart';
 import 'package:system_tareo/views/navegacion/eventos.dart';
-import 'package:system_tareo/views/pendiente.dart';
 
-class ContenidoOp extends StatelessWidget {
+class ContenidoOp extends StatefulWidget {
   const ContenidoOp({super.key});
+
+  @override
+  State<ContenidoOp> createState() => _ContenidoOpState();
+}
+
+class _ContenidoOpState extends State<ContenidoOp> {
+  Color circleColor = Colors.green; // Color por defecto
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCircleColor(); // Cargar color desde SharedPreferences
+  }
+
+  Future<void> _loadCircleColor() async {
+    final prefs = await SharedPreferences.getInstance();
+    final colorValue = prefs.getInt('circleColor');
+    print('Color cargado: $colorValue');
+    setState(() {
+      circleColor = colorValue != null ? Color(colorValue) : Colors.green;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +34,7 @@ class ContenidoOp extends StatelessWidget {
     return SizedBox(
       height: size.height * 0.7,
       child: ListView.builder(
-        itemCount: 3,
+        itemCount: 1,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -27,13 +50,9 @@ class ContenidoOp extends StatelessWidget {
                         (context, animation, animationSecondary, child) {
                       return SlideTransition(
                         position: Tween<Offset>(
-                          begin: const Offset(1.0, 0.0),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
+                                begin: const Offset(1.0, 0.0), end: Offset.zero)
+                            .animate(animation),
+                        child: FadeTransition(opacity: animation, child: child),
                       );
                     },
                   ),
@@ -50,7 +69,6 @@ class ContenidoOp extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Column(
-                    //crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,22 +76,47 @@ class ContenidoOp extends StatelessWidget {
                           const Text(
                             'OP: 164331',
                             style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: 17, fontWeight: FontWeight.bold),
                           ),
-                          IconButton(
-                              onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>  EstadoProcesoScreen()));
-                              },
-                              icon: const Icon(Icons.data_saver_on))
+                          Row(
+                            children: [
+                              Text(
+                                circleColor == const Color(0xfff44336)
+                                    ? 'Pendiente'
+                                    : 'No hay pendientes',
+                                style: TextStyle(
+                                    color: circleColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              /*Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: circleColor, // Color dinámico
+                            ),
+                          ),*/
+                              IconButton(
+                                  onPressed: circleColor ==
+                                          const Color(0xfff44336)
+                                      ? () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const BotonInicioPreparacion(
+                                                    texto: '',
+                                                  )))
+                                      : () {},
+                                  icon: const Icon(Icons.send))
+                            ],
+                          )
                         ],
                       ),
                       const Divider(color: Colors.grey),
                       _infoRow2('🏢 Cliente:', 'INSTITUTO QUIMIOTERAPICO S.A.'),
                       _infoRow2('📦 Descrip:',
                           'EMV07714 SULFATO FERROSO 75MG/5ML JARABE CAJA X 180 ML - 54X54X140MM'),
-                      //---------------------segunda division------------------------------------------
                       const Divider(color: Colors.grey),
                       _infoRow2('Fecha/Hora Inicio', '05/03/2025 15:33:00'),
                       const Divider(color: Colors.grey),
@@ -86,7 +129,6 @@ class ContenidoOp extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                              
                                 _infoRow('Tipo: ', 'impresora'),
                                 _infoRow('Tiraje: ', '15900'),
                                 _infoRow('Cant: ', '45000'),
@@ -94,97 +136,74 @@ class ContenidoOp extends StatelessWidget {
                               ],
                             ),
                             Container(
-                              height: 120,
-                              width: 2,
-                              color: Colors.grey
-                            ),
+                                height: 120, width: 2, color: Colors.grey),
                             const Row(
-                              // mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Column(
-                                  //mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text('Amp',
                                         style: TextStyle(
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold)),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
+                                    SizedBox(height: 5),
                                     CircleAvatar(
                                       radius: 15,
                                       backgroundColor: Colors.green,
                                       child: Center(
-                                          child: Text(
-                                        'H',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                      )),
+                                          child: Text('H',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15))),
                                     ),
                                   ],
                                 ),
-                                SizedBox(width: 2,),
+                                SizedBox(width: 2),
                                 Column(
                                   children: [
-                                    Text(
-                                      'Ctp',
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
+                                    Text('Ctp',
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 5),
                                     CircleAvatar(
                                       radius: 15,
                                       backgroundColor: Colors.red,
                                       child: Center(
-                                          child: Text(
-                                        'D',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                      )),
+                                          child: Text('D',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15))),
                                     ),
                                   ],
                                 ),
-                                SizedBox(width: 2,),
+                                SizedBox(width: 2),
                                 Column(
                                   children: [
-                                    Text(
-                                      'Matizad',
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
+                                    Text('Matizad',
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 5),
                                     CircleAvatar(
                                       radius: 15,
                                       backgroundColor: Colors.yellow,
                                       child: Center(
-                                          child: Text(
-                                        '',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      )),
+                                          child: Text('',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20))),
                                     ),
                                   ],
                                 ),
                               ],
                             ),
-                            
                           ],
                         ),
                       ),
                       const Divider(color: Colors.grey),
-                      
                     ],
                   ),
                 ),
@@ -203,13 +222,8 @@ class ContenidoOp extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: textColor,
-            ),
-          ),
+          Text(title,
+              style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
           Text(value, style: TextStyle(color: textColor)),
         ],
       ),
@@ -224,16 +238,12 @@ class ContenidoOp extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 3,
-            child: Text(
-              title,
-              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
-            ),
-          ),
+              flex: 3,
+              child: Text(title,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: textColor))),
           Expanded(
-            flex: 7,
-            child: Text(value, style: TextStyle(color: textColor)),
-          ),
+              flex: 7, child: Text(value, style: TextStyle(color: textColor))),
         ],
       ),
     );

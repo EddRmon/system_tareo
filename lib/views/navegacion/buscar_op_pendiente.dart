@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:system_tareo/widgets/navegacion/contenido_op.dart';
 
 class BuscarOpPendiente extends StatefulWidget {
@@ -13,6 +14,7 @@ class _BuscarOpPendienteState extends State<BuscarOpPendiente> {
   String? selectedPreparationOption;
   late VoidCallback resetTiposEventos = () {};
   // 🔹 Variable para guardar la función de reset
+  
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,8 @@ class _BuscarOpPendienteState extends State<BuscarOpPendiente> {
                       ),
                     ),
                   ),
+                   
+                  ////
                   
                 ],
               ),
@@ -75,4 +79,5 @@ class _BuscarOpPendienteState extends State<BuscarOpPendiente> {
       ),
     );
   }
+  
 }
