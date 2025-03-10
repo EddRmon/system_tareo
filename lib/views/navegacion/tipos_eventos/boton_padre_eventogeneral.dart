@@ -15,6 +15,9 @@ class BotonPadreEventogeneral extends StatefulWidget {
 
 class _BotonPadreEventogeneralState extends State<BotonPadreEventogeneral> {
   String? savedTime;
+  Color colorAmarillo = const Color(0xFFFFF5CC); 
+    Color colorAzulClaro =
+        const Color.fromARGB(255, 118, 133, 216);
 
   // Estado para controlar si está produciendo o no
   Stream<String> getHoraStream() {
@@ -66,7 +69,7 @@ class _BotonPadreEventogeneralState extends State<BotonPadreEventogeneral> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 5, 124, 179),
+        backgroundColor: colorAzulClaro,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -120,13 +123,14 @@ class _BotonPadreEventogeneralState extends State<BotonPadreEventogeneral> {
                           // Información de la hora guardada
                           Card(
                             elevation: 2,
+                            color: colorAmarillo,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 15),
                               child: Text(
                                 savedTime == null
                                     ? 'No hay tiempo guardado.'
-                                    : 'Hora de inicio ${widget.texto}\n ${formatearFecha(savedTime!)}',
+                                    : 'Hora de inicio\n${widget.texto}\n ${formatearFecha(savedTime!)}',
                                 style: TextStyle(
                                   fontSize: size.width > 600 ? 16 : 14,
                                   fontWeight: FontWeight.bold,
@@ -157,7 +161,7 @@ class _BotonPadreEventogeneralState extends State<BotonPadreEventogeneral> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 15),
+                            horizontal: 15, vertical: 15),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                       ),

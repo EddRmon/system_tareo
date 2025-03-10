@@ -8,14 +8,17 @@ class AuthProvider with ChangeNotifier {
   bool _isLoading = false;
   String _user = '';
   String _nombreOperador = '';
+  String _idOperador = '';
+
   
 
   bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
   String get user => _user;
   String get nombreOperador => _nombreOperador;
+  String get idOperadors => _idOperador;
 
-Future<void> authentication(String usuario, String contra)async {
+Future<void> authentication(String usuario, String contra) async {
   try{
     await login(usuario, contra);
   }catch(e){
@@ -37,6 +40,7 @@ Future<void> login(String uss, String pass) async{
       if(responseBody['valid'] == true){
         _user = responseBody['usuario'] ?? '';
         _nombreOperador = responseBody['operador'] ?? '';
+        _idOperador = responseBody['IDOperador'] ?? '';
         _isAuthenticated = true;
         print('Respuesta de la api-- $responseBody');
         notifyListeners();

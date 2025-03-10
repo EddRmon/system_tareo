@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:system_tareo/widgets/navegacion/contenido_op.dart';
 
 class BuscarOpPendiente extends StatefulWidget {
-  const BuscarOpPendiente({super.key});
+  const BuscarOpPendiente({super.key, required this.idMaquina});
+  final String? idMaquina;
 
   @override
   State<BuscarOpPendiente> createState() => _BuscarOpPendienteState();
@@ -13,12 +13,11 @@ class _BuscarOpPendienteState extends State<BuscarOpPendiente> {
   final TextEditingController _buscar = TextEditingController();
   String? selectedPreparationOption;
   late VoidCallback resetTiposEventos = () {};
-  // 🔹 Variable para guardar la función de reset
-  
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,7 +72,7 @@ class _BuscarOpPendienteState extends State<BuscarOpPendiente> {
               ),
             ),
             // Cuerpo de la vista
-            const ContenidoOp(),
+             ContenidoOp(codMaq: widget.idMaquina,),
           ],
         ),
       ),

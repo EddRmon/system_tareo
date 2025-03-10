@@ -26,7 +26,7 @@ class SearchBarWidget extends StatelessWidget {
             borderSide: BorderSide.none
           ),
           filled: true,
-          fillColor: const Color.fromARGB(255, 236, 236, 236),
+          fillColor: Colors.white,
           contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         ),
         onChanged: (query) {

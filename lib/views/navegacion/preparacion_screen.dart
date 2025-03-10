@@ -11,11 +11,16 @@ class PreparacionScreen extends StatefulWidget {
 }
 
 class _PreparacionScreenState extends State<PreparacionScreen> {
+
+  Color colorAmarillo = const Color(0xFFFFF5CC); 
+    Color colorAzulClaro =
+        const Color.fromARGB(255, 118, 133, 216);
+
   final List<Map<String, dynamic>> preparationOptions = [
-    {'icon': Icons.check_box, 'text': 'Puesta a Punto', 'color': Colors.green},
-    {'icon': Icons.settings, 'text': 'Mantenimiento', 'color': Colors.orange},
-    {'icon': Icons.build, 'text': 'Revisión Técnica', 'color': const Color.fromARGB(255, 103, 35, 230)},
-    {'icon': Icons.work, 'text': 'Producción Especial', 'color': const Color.fromARGB(255, 221, 77, 84)},
+    {'icon': Icons.check_box, 'text': 'Puesta a Punto', 'color': const Color.fromARGB(255, 118, 133, 216)},
+    {'icon': Icons.settings, 'text': 'Mantenimiento', 'color': const Color.fromARGB(255, 118, 133, 216)},
+    {'icon': Icons.build, 'text': 'Revisión Técnica', 'color': const Color.fromARGB(255, 118, 133, 216)},
+    {'icon': Icons.work, 'text': 'Producción Especial', 'color': const Color.fromARGB(255, 118, 133, 216)},
   ];
 
   Future<void> _saveTimeAndColor(String option) async {
@@ -31,11 +36,12 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 5, 124, 179),
+        backgroundColor: colorAzulClaro,
         elevation: 0,
         title: const Text('Preparación', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.black), onPressed: () => Navigator.pop(context)),
       ),
+      backgroundColor: colorAmarillo,
       body: SafeArea(
         child: Center(
           child: Padding(

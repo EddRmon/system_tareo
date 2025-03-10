@@ -32,6 +32,9 @@ class EventosGeneralContent extends StatefulWidget {
 }
 
 class _EventosGeneralContentState extends State<EventosGeneralContent> {
+  Color colorAmarillo = const Color(0xFFFFF5CC); 
+    Color colorAzulClaro =
+        const Color.fromARGB(255, 118, 133, 216);
 
   Future<void> _saveTime() async {
     final prefs = await SharedPreferences.getInstance();
@@ -48,19 +51,19 @@ class _EventosGeneralContentState extends State<EventosGeneralContent> {
     final eventViewModel = Provider.of<EventViewModel>(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorAzulClaro,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           child: Column(
             children: [
-              const Divider(color: Colors.grey),
+              const Divider(color: Colors.black),
               const Text(
                 'Eventos',
                 style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const Divider(color: Colors.grey),
+              const Divider(color: Colors.black),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: SearchBarWidget(), // Widget reutilizable para el buscador
@@ -104,7 +107,7 @@ class _EventosGeneralContentState extends State<EventosGeneralContent> {
                                 style: TextStyle(
                                   fontSize: isLandScape ? size.height * 0.04 : size.height * 0.014,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                                 textAlign: TextAlign.center,
                               ),

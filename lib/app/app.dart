@@ -13,9 +13,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey)),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.black)),
       title: 'Login con Bloc',
-      home: SingIn(),
+      home: const SingIn(),
       /*
       initialRoute: '/',
       routes: {

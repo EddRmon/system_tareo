@@ -14,6 +14,7 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
   final TextEditingController piegosParcialesMalosController = TextEditingController();
   final TextEditingController obsController = TextEditingController();
   final TextEditingController piegosParcialesController = TextEditingController();
+  
 
   String tipoCaja = "Seleccionar";
   String causaSeleccionada = "Seleccionar Causa";
@@ -82,7 +83,7 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
               children: [
                 TextButton(
                   onPressed: () {
-                    finalizarProceso();
+                    //finalizarProceso();
                     Navigator.pop(context);
                   },
                   child: const Text('Cerrar'),

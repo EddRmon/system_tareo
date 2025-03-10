@@ -19,6 +19,8 @@ class _TiposEventosState extends State<TiposEventos> {
 
   
 
+  
+
   final List<Map<String, dynamic>> eventos = [
     {
       'nombre': 'Preparación',
@@ -55,16 +57,18 @@ class _TiposEventosState extends State<TiposEventos> {
   Future<void> _saveTime() async {
     final prefs = await SharedPreferences.getInstance();
     final now = DateTime.now();
-    await prefs.setString(
-        'savedTime', DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
+    final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+    await prefs.setString('savedTime', formattedTime);
+    await prefs.setInt('circleColor', Colors.red.value); // Cambiar a rojo al iniciar
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    Color colorAmarillo = const Color(0xFFFFF5CC); 
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorAmarillo,
       body: CustomScrollView(
         slivers: [
           /// SliverAppBar con imagen de fondo
@@ -94,6 +98,7 @@ class _TiposEventosState extends State<TiposEventos> {
                 children: [
                   IconButton(
                     iconSize: 30,
+                    color: Colors.white,
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: (){setState(() {
                         _mostrarLista = false; // Mostrar GridView
@@ -101,7 +106,8 @@ class _TiposEventosState extends State<TiposEventos> {
                   const SizedBox(width: 10,),
                   IconButton(
                     iconSize: 30,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+                    color: Colors.white,
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 170, 55, 236)),
                     onPressed: (){
                     
                     setState(() {

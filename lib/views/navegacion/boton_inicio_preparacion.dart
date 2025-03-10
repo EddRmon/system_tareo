@@ -14,6 +14,9 @@ class BotonInicioPreparacion extends StatefulWidget {
 
 class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
   String? savedTime;
+  Color colorAmarillo = const Color(0xFFFFF5CC); 
+    Color colorAzulClaro =
+        const Color.fromARGB(255, 118, 133, 216);
   
 
   @override
@@ -55,7 +58,7 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
     final size = MediaQuery.of(context).size;
     // ignore: deprecated_member_use
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 5, 124, 179),
+      backgroundColor: colorAzulClaro,
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
@@ -150,6 +153,7 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: colorAmarillo,
       builder: (BuildContext context) {
         final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
         final size = MediaQuery.of(context).size;

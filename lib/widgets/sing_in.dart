@@ -220,7 +220,7 @@ class _SingInState extends State<SingIn> {
       onChanged: cambiar,
       items: maquinas.map((Map<String, String> maquina) {
         return DropdownMenuItem(
-          value: maquina['MaqNro'], // Usar MaqNro como valor interno
+          value: '${maquina['MaqNro']}-${maquina['MaqDes']}', // Usar MaqNro como valor interno
           child: Text(
             '${maquina['MaqNro']} - ${maquina['MaqDes']}', // Mostrar MaqNro y MaqDes
             style: const TextStyle(
@@ -270,10 +270,11 @@ class _SingInState extends State<SingIn> {
 }
 
 class CurvePainter extends CustomPainter {
+  Color colorAmarillo = const Color(0xFFFFF5CC); // Reemplaza con el código correcto
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = const Color.fromARGB(255, 5, 124, 179)
+      ..color = colorAmarillo
       ..style = PaintingStyle.fill;
     Path path = Path()
       ..moveTo(0, size.width)

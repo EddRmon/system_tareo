@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BotonInicioProduccion extends StatefulWidget {
   const BotonInicioProduccion({super.key, required this.text, required this.onFinish, });
@@ -26,6 +27,12 @@ class _BotonInicioProduccionState extends State<BotonInicioProduccion> {
     piegosParcialesMalosController.dispose();
     obsController.dispose();
     piegosParcialesController.dispose();
+  }
+
+  void finalizarProceso() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('procesoPendiente', false);
+    await prefs.setInt('circleColor', Colors.green.value); // Volver a verde al finalizar
   }
 
   @override
@@ -64,7 +71,7 @@ class _BotonInicioProduccionState extends State<BotonInicioProduccion> {
             
             ElevatedButton(
               onPressed: () {
-                
+                finalizarProceso();
                 widget.onFinish();
                 Navigator.of(context).pop(); // Cierra solo el ModalBottomSheet
                 
