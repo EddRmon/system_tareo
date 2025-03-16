@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:system_tareo/views/navegacion/buscar_op_pendiente.dart';
+import 'package:system_tareo/views/navegacion/buscar_op_vista.dart';
 import 'package:system_tareo/views/navegacion/registro_actividades.dart';
 import 'package:system_tareo/views/navegacion/stock_almacen.dart';
 import 'package:system_tareo/widgets/navegacion/drawer_usuario.dart';
 
-
-
-class BarraNavegacion extends StatelessWidget {
+class BarraNavegacion extends StatefulWidget {
   const BarraNavegacion({super.key, required this.maquina});
   final String? maquina;
 
   @override
-  Widget build(BuildContext context) {
+  State<BarraNavegacion> createState() => _BarraNavegacionState();
+}
 
-    String onbtenerIdMaquina(String texto){
+class _BarraNavegacionState extends State<BarraNavegacion> {
+  
+  @override
+  Widget build(BuildContext context) {
+    String onbtenerIdMaquina(String texto) {
       List<String> idMaquina = texto.split('-');
       String idmaq = idMaquina[0];
       return idmaq;
     }
-    
-    Color colorAzulClaro =
-        const Color.fromARGB(255, 118, 133, 216); // Reemplaza con el código correcto
+
+    Color colorAzulClaro = const Color.fromARGB(
+        255, 118, 133, 216); // Reemplaza con el código correcto
     return DefaultTabController(
-      length: 3,
+      length: 4,
       // ignore: deprecated_member_use
       child: WillPopScope(
         onWillPop: () async {
@@ -31,7 +35,7 @@ class BarraNavegacion extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              'Tareo $maquina',
+              'Tareo ${widget.maquina}',
               style: const TextStyle(
                   fontSize: 15,
                   color: Colors.white,
@@ -47,10 +51,11 @@ class BarraNavegacion extends StatelessWidget {
               indicatorColor: Colors.black,
               tabs: [
                 //Tab(text: "Inicio"),
-                Tab(text: "Ops"),
+                Tab(text: "Trabajo"),
+                Tab(text: "Estados"),
                 Tab(text: "Registro"),
                 Tab(text: "Stock"),
-               
+                //Tab(text: "Prog"),
               ],
             ),
             actions: const [
@@ -65,16 +70,18 @@ class BarraNavegacion extends StatelessWidget {
             backgroundColor: colorAzulClaro,
           ),
           drawer: const DrawerUsuario(),
-          body:  TabBarView(
+          body: TabBarView(
             children: [
-              //VistaInicio(),
-              BuscarOpPendiente(idMaquina: onbtenerIdMaquina(maquina!),),
+               BuscarOpVista(idMaq:onbtenerIdMaquina(widget.maquina!),),
+               //PreviaEvento1(idMaq: '164644', op: '195',),
+              BuscarOpPendiente(
+                idMaquina: onbtenerIdMaquina(widget.maquina!),
+              ),
               const RegistroActividades(),
               const StockAlmacen(),
-           
+              //const ProgramaOpMaquinas()
             ],
           ),
-          
         ),
       ),
     );

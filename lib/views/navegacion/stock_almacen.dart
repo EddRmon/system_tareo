@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:system_tareo/providers/event_p_provider.dart';
 
 class StockAlmacen extends StatefulWidget {
   const StockAlmacen({super.key});
@@ -48,20 +50,26 @@ class _StockAlmacenState extends State<StockAlmacen> {
               ),
             ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index){
-                    return  Column(
-                      children: [
-                        ListTile(
-                          title: Text('Barniz acrilico ${index + 1}') ,
-                          subtitle: Text('Codigo SBA: 32465', style:  TextStyle(fontSize: 12),),
-                          trailing: Icon(Icons.image),
-                          ),
-                          Divider()
-                      ],
-                    );
-                  }),
+                child: Consumer<EventPProvider>(
+                  builder: ( context,  value,  child) { 
+                    return ListView.builder(
+                    itemCount: value.evenPrep.length,
+                    itemBuilder: (context, index){
+                      final event = value.evenPrep[index];
+                      return  Column(
+                        children: [
+                          ListTile(
+                            title: Text(' ${event.codeEvent}') ,
+                            subtitle: Text('${event.description}', style:  TextStyle(fontSize: 12),),
+                            trailing: Icon(Icons.image),
+                            ),
+                            Divider()
+                        ],
+                      );
+                    });
+                   },
+                 
+                ),
               )
           ],
         ),

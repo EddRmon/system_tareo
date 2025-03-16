@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_tareo/providers/programa_maquina_provider.dart';
+//import 'package:system_tareo/views/navegacion/antes_del_evento.dart';
 import 'package:system_tareo/views/navegacion/boton_inicio_preparacion.dart';
-import 'package:system_tareo/views/navegacion/eventos.dart';
+
 
 class ContenidoOp extends StatefulWidget {
   const ContenidoOp({super.key, required this.codMaq});
@@ -21,9 +23,7 @@ class _ContenidoOpState extends State<ContenidoOp> {
     super.initState();
     _loadCircleColor(); // Cargar color desde SharedPreferences
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context
-          .read<ProgramaMaquinaProvider>()
-          .obtenerProgramaMaquina(idMaquina: widget.codMaq);
+      context.read<ProgramaMaquinaProvider>().obtenerProgramaMaquina(idMaquina: widget.codMaq);
     });
   }
 
@@ -49,8 +49,11 @@ class _ContenidoOpState extends State<ContenidoOp> {
             itemBuilder: (context, index) {
               final maqdetalle = maqProgProvData.progMaquinadata[index];
               if (maqProgProvData.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return Center(
+                  child: LoadingAnimationWidget.threeArchedCircle(
+                    color: const Color.fromARGB(255, 96, 125, 139),
+                    size: 50
+                  ),
                 );
               }
               if (maqProgProvData.errorMessage != null) {
@@ -68,11 +71,11 @@ class _ContenidoOpState extends State<ContenidoOp> {
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    /*Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            const TiposEventos(),
+                             PreviaEvento(idMaq: widget.codMaq!, op: maqdetalle.motCodOdt!,),
                         transitionDuration: const Duration(milliseconds: 350),
                         transitionsBuilder:
                             (context, animation, animationSecondary, child) {
@@ -86,7 +89,7 @@ class _ContenidoOpState extends State<ContenidoOp> {
                           );
                         },
                       ),
-                    );
+                    );*/
                   },
                   child: Card(
                     elevation: 5,
@@ -135,7 +138,7 @@ class _ContenidoOpState extends State<ContenidoOp> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       const BotonInicioPreparacion(
-                                                        texto: '',
+                                                         nombEvento: '', tipoProceso: '', motCodOdt: '', secuencyMachine: '', motNroElem: '', odtMaq: '', complement: '',
                                                       )))
                                           : () {},
                                       icon: const Icon(Icons.send))

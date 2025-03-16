@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:system_tareo/providers/prendiente.dart';
-import 'package:system_tareo/views/navegacion/boton_inicio_preparacion.dart';
+
 
 
 class EstadoProcesoScreen extends StatelessWidget {
@@ -28,7 +28,7 @@ class EstadoProcesoScreen extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const BotonInicioPreparacion(texto: '',)));
+                   // Navigator.push(context, MaterialPageRoute(builder: (_) => const BotonInicioPreparacion()));
                   }, // Cambia el estado al presionar
                   style: ElevatedButton.styleFrom(
                     backgroundColor:  Colors.blue,

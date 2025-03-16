@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:system_tareo/providers/auth_provider.dart';
 import 'package:system_tareo/providers/mostrar_registros_provider.dart';
@@ -176,7 +177,12 @@ Color colorAmarillo = const Color(0xFFFFF5CC);
                 child: Consumer<MostrarRegistrosProvider>(
                   builder: (context, regProv, child) {
                     if (regProv.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(
+                  child: LoadingAnimationWidget.threeRotatingDots(
+                    color: const Color.fromARGB(255, 63, 80, 177),
+                    size: 50
+                  ),
+                );
                     }
                     if (regProv.errorMessage != null) {
                       return Center(

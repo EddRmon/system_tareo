@@ -6,7 +6,20 @@ import 'package:system_tareo/views/navegacion/boton_padre_produccion.dart';
 import 'package:system_tareo/views/navegacion/preparacion_screen.dart';
 
 class TiposEventos extends StatefulWidget {
-  const TiposEventos({super.key});
+  const TiposEventos(
+      {super.key,
+      required this.motCodOdt,
+      required this.secuencyMachine,
+      required this.motNroElem,
+      required this.odtMaq,
+      required this.complement,
+      required this.generado});
+  final String motCodOdt;
+  final String secuencyMachine;
+  final String motNroElem;
+  final String odtMaq;
+  final String complement;
+  final String generado;
 
   @override
   State<TiposEventos> createState() => _TiposEventosState();
@@ -16,10 +29,6 @@ class _TiposEventosState extends State<TiposEventos> {
   int _currentPage = 0;
   late PageController _pageController;
   bool _mostrarLista = false; // Estado para alternar entre lista y grid
-
-  
-
-  
 
   final List<Map<String, dynamic>> eventos = [
     {
@@ -59,16 +68,16 @@ class _TiposEventosState extends State<TiposEventos> {
     final now = DateTime.now();
     final formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
     await prefs.setString('savedTime', formattedTime);
-    await prefs.setInt('circleColor', Colors.red.value); // Cambiar a rojo al iniciar
+    await prefs.setInt(
+        'circleColor', Colors.red.value); // Cambiar a rojo al iniciar
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    Color colorAmarillo = const Color(0xFFFFF5CC); 
 
     return Scaffold(
-      backgroundColor: colorAmarillo,
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           /// SliverAppBar con imagen de fondo
@@ -97,24 +106,31 @@ class _TiposEventosState extends State<TiposEventos> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                    iconSize: 30,
-                    color: Colors.white,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    onPressed: (){setState(() {
-                        _mostrarLista = false; // Mostrar GridView
-                      });}, icon: const Icon(Icons.grid_view)),
-                  const SizedBox(width: 10,),
+                      iconSize: 30,
+                      color: Colors.white,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
+                      onPressed: () {
+                        setState(() {
+                          _mostrarLista = false; // Mostrar GridView
+                        });
+                      },
+                      icon: const Icon(Icons.grid_view)),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   IconButton(
-                    iconSize: 30,
-                    color: Colors.white,
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 170, 55, 236)),
-                    onPressed: (){
-                    
-                    setState(() {
-                        _mostrarLista = true; // Mostrar SliverList
-                      });
-                  }, icon: const Icon(Icons.list)),
-                  
+                      iconSize: 30,
+                      color: Colors.white,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 170, 55, 236)),
+                      onPressed: () {
+                        setState(() {
+                          _mostrarLista = true; // Mostrar SliverList
+                        });
+                      },
+                      icon: const Icon(Icons.list)),
                 ],
               ),
             ),
@@ -153,87 +169,91 @@ class _TiposEventosState extends State<TiposEventos> {
 
   /// Construcción del SliverList
   Widget _buildSliverList(Size size) {
-  return SliverList(
-    delegate: SliverChildBuilderDelegate(
-      (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          child: GestureDetector(
-            onTap: () {}, 
-            child: Card(
-              elevation: 4,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: Colors.green, width: 1.5),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildInfoRow(
-                      icon: Icons.numbers,
-                      label: "OP",
-                      value: "${index + 164331}",
-                      color: Colors.black87,
-                    ),
-                    const Divider(),
-                    _buildInfoRow(
-                      icon: Icons.assignment,
-                      label: "Estado",
-                      value: "Generado",
-                      color: Colors.blueAccent,
-                    ),
-                    const Divider(),
-                    _buildInfoRow(
-                      icon: Icons.numbers,
-                      label: "OP",
-                      value: "164859",
-                      color: Colors.black ,
-                    ),
-                    const Divider(),
-                    _buildInfoRow(
-                      icon: Icons.assignment,
-                      label: "Estado",
-                      value: "Finalizado",
-                      color: Colors.orange,
-                    ),
-                    const Divider(),
-                  ],
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            child: GestureDetector(
+              onTap: () {},
+              child: Card(
+                elevation: 4,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: const BorderSide(color: Colors.green, width: 1.5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildInfoRow(
+                        icon: Icons.numbers,
+                        label: "OP",
+                        value: "${index + 164331}",
+                        color: Colors.black87,
+                      ),
+                      const Divider(),
+                      _buildInfoRow(
+                        icon: Icons.assignment,
+                        label: "Estado",
+                        value: "Generado",
+                        color: Colors.blueAccent,
+                      ),
+                      const Divider(),
+                      _buildInfoRow(
+                        icon: Icons.numbers,
+                        label: "OP",
+                        value: "164859",
+                        color: Colors.black,
+                      ),
+                      const Divider(),
+                      _buildInfoRow(
+                        icon: Icons.assignment,
+                        label: "Estado",
+                        value: "Finalizado",
+                        color: Colors.orange,
+                      ),
+                      const Divider(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
-      childCount: 1, // Cambia esto según la cantidad de elementos que desees mostrar
-    ),
-  );
-}
+          );
+        },
+        childCount:
+            1, // Cambia esto según la cantidad de elementos que desees mostrar
+      ),
+    );
+  }
 
-Widget _buildInfoRow({required IconData icon, required String label, required String value, Color? color}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      children: [
-        Icon(icon, color: color ?? Colors.black54, size: 20),
-        const SizedBox(width: 8),
-        Text(
-          "$label: ",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-        ),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(fontSize: 14, color: color ?? Colors.black87),
+  Widget _buildInfoRow(
+      {required IconData icon,
+      required String label,
+      required String value,
+      Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, color: color ?? Colors.black54, size: 20),
+          const SizedBox(width: 8),
+          Text(
+            "$label: ",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 14, color: color ?? Colors.black87),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   /// Construcción de cada tarjeta en el GridView
   Widget _buildEventCard(Map<String, dynamic> evento, Size size,
@@ -268,15 +288,34 @@ Widget _buildInfoRow({required IconData icon, required String label, required St
 
   void _navigateToEvent(Map<String, dynamic> evento) {
     if (evento['preparacion'] == true) {
-      Navigator.push(context, _slideTransition(const PreparacionScreen()));
+      Navigator.push(
+          context,
+          _slideTransition(PreparacionScreen(
+            tipoProceso: '0',
+            motCodOdt: widget.motCodOdt,
+            secuencyMachine: widget.secuencyMachine,
+            motNroElem: widget.motNroElem,
+            odtMaq: widget.odtMaq,
+            complement: widget.complement,
+            generado: widget.generado,
+          )));
     } else if (evento['produccion'] == true) {
       _saveTime();
       Navigator.push(
-          context, _slideTransition(const BotonPadreProduccion(texto: 'produccion')));
+          context,
+          _slideTransition(const BotonPadreProduccion(
+            texto: 'produccion',
+            tipoProceso: '1',
+          )));
     } else if (evento['navigate'] == true) {
-      Navigator.push(context, _slideTransition(const EventosGeneralScreen()));
+      Navigator.push(
+          context,
+          _slideTransition(const EventosGeneralScreen(
+            tipoProceso: '2',
+          )));
     }
   }
+
   PageRouteBuilder _slideTransition(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,

@@ -25,7 +25,7 @@ class TrabajoMaquina {
     String enlace;
     String mottirret;
     String? estadoAlm;
-    dynamic? estadoMatri;
+    dynamic estadoMatri;
     String? estadoCtp;
     String? estadoMatiz;
 
@@ -52,25 +52,25 @@ class TrabajoMaquina {
     });
 
     factory TrabajoMaquina.fromJson(Map<String, dynamic> json) => TrabajoMaquina(
-        maqNro: json["MaqNro"],
-        motCodOdt: json["MotCodOdt"],
-        motEnlace: json["MotEnlace"],
-        iniproc: json["INIPROC"],
-        horaInProc: json["HoraINProc"],
-        finproc: json["FINPROC"],
-        horaFinProc: json["HoraFinProc"],
-        clides: json["Clides"],
-        motDescrip: json["MotDescrip"],
-        motTipoMaq: json["MotTipoMaq"],
-        motCant: json["MotCant"],
-        motPliegos: json["MotPliegos"],
-        fecofrec: json["FECOFREC"],
-        enlace: json["Enlace"],
-        mottirret: json["mottirret"],
-        estadoAlm: json["estadoALM"],
-        estadoMatri: json["estadoMATRI"],
-        estadoCtp: json["estadoCTP"],
-        estadoMatiz: json["estadoMATIZ"],
+        maqNro: json["MaqNro"] ?? '',
+        motCodOdt: json["MotCodOdt"]?? '',
+        motEnlace: json["MotEnlace"]?? '',
+        iniproc: json["INIPROC"]?? '',
+        horaInProc: json["HoraINProc"]?? '',
+        finproc: json["FINPROC"]?? '',
+        horaFinProc: json["HoraFinProc"]?? '',
+        clides: json["Clides"]?? '',
+        motDescrip: json["MotDescrip"]?? '',
+        motTipoMaq: json["MotTipoMaq"]?? '',
+        motCant: json["MotCant"]?? '',
+        motPliegos: json["MotPliegos"]?? '',
+        fecofrec: json["FECOFREC"]?? '',
+        enlace: json["Enlace"]?? '',
+        mottirret: json["mottirret"]?? '',
+        estadoAlm: json["estadoALM"]?? '',
+        estadoMatri: json["estadoMATRI"]?? '',
+        estadoCtp: json["estadoCTP"]?? '',
+        estadoMatiz: json["estadoMATIZ"]?? '',
     );
 
     Map<String, dynamic> toJson() => {
