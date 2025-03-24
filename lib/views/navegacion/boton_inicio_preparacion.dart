@@ -142,7 +142,7 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      _showUnidadesProcesadasDialog(context);
+                      _showUnidadesProcesadasDialog(context, widget.secuencyMachine);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 199, 28, 16),
@@ -169,7 +169,7 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
     );
   }
 
-  void _showUnidadesProcesadasDialog(BuildContext context) {
+  void _showUnidadesProcesadasDialog(BuildContext context, String secuencia) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -198,7 +198,7 @@ class _BotonInicioPreparacionState extends State<BotonInicioPreparacion> {
                           Navigator.of(context).pop(); // Cerrar modal
                           Navigator.of(context).pop(); // Cerrar pantalla
                         },
-                        text: widget.nombEvento, op: widget.motCodOdt, idMaq: widget.odtMaq,
+                        text: widget.nombEvento, op: widget.motCodOdt, idMaq: widget.odtMaq
                       ),
                     ),
                   ],

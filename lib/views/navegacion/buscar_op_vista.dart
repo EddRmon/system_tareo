@@ -122,7 +122,8 @@ class _BuscarOpVistaState extends State<BuscarOpVista> {
                               secuencyMachine: op.secuencyMachine,
                               motNroElem: op.motNroElem,
                               odtMaq: op.motCodMaq,
-                              complement: op.motNroComplem, generado: op.motEstado,
+                              complement: op.motNroComplem,
+                              generado: op.motEstado,
                             ),
                             transitionDuration:
                                 const Duration(milliseconds: 350),
@@ -170,16 +171,17 @@ class _BuscarOpVistaState extends State<BuscarOpVista> {
                                       Text(
                                         'Elemento: ${op.motNroElem}',
                                         style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       IconButton(
                                         onPressed: () {},
                                         icon: const Icon(Icons.send),
                                       ),
                                     ],
-                                  ),
+                                  )
                                 ],
                               ),
                               const Divider(color: Colors.grey),
@@ -221,6 +223,7 @@ class _BuscarOpVistaState extends State<BuscarOpVista> {
                                 ),
                               ),
                               const Divider(color: Colors.grey),
+                              
                             ],
                           ),
                         ),

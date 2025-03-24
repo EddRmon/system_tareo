@@ -108,6 +108,7 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
        showDialog(
         context: context,
          builder: (BuildContext context){
+         
         return  Center(
                   child: LoadingAnimationWidget.threeRotatingDots(
                     color: const Color.fromARGB(255, 63, 80, 177),
@@ -124,7 +125,9 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
         print(' $idOperdor');
         print(' ${widget.tipoProceso}');
         print(' $maq');
+
         try{
+
           await context.read<InsertarEventoProvider>().insertarEvento(
             nrop: widget.motCodOdt,
             complemento: widget.complement,
@@ -135,6 +138,23 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
             idoperador: idOperdor,
             tipoproceso: widget.tipoProceso,
             codeevento: maq);
+
+
+            Navigator.of(context, rootNavigator: true).pop(); 
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BotonInicioPreparacion(
+                      nombEvento: text,
+                      tipoProceso: widget.tipoProceso,
+                      motCodOdt: widget.motCodOdt,
+                      secuencyMachine: widget.secuencyMachine,
+                      motNroElem: widget.motNroElem,
+                      odtMaq: widget.odtMaq,
+                      complement: widget.complement,
+                    )));
+
+
         } catch(e){
           showDialog(
                 // ignore: use_build_context_synchronously
@@ -148,21 +168,10 @@ class _PreparacionScreenState extends State<PreparacionScreen> {
                   );
                 });
         }
-        
-
         _saveTimeAndColor(text); // Guardar tiempo y cambiar color a rojo
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => BotonInicioPreparacion(
-                      nombEvento: text,
-                      tipoProceso: widget.tipoProceso,
-                      motCodOdt: widget.motCodOdt,
-                      secuencyMachine: widget.secuencyMachine,
-                      motNroElem: widget.motNroElem,
-                      odtMaq: widget.odtMaq,
-                      complement: widget.complement,
-                    )));
+
+        ;
+         
       },
       borderRadius: BorderRadius.circular(12),
       child: Container(

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:system_tareo/providers/auth_provider.dart';
+import 'package:system_tareo/providers/insertar_inicio_evento_provider.dart';
+import 'package:system_tareo/providers/op_fecha_provider.dart';
 import 'package:system_tareo/views/eventos_general_screen.dart';
 import 'package:system_tareo/views/navegacion/boton_padre_produccion.dart';
 import 'package:system_tareo/views/navegacion/preparacion_screen.dart';
@@ -55,6 +60,9 @@ class _TiposEventosState extends State<TiposEventos> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<OpFechaProvider>().obtenerfechasOp(widget.motCodOdt);
+    });
   }
 
   @override
@@ -169,63 +177,59 @@ class _TiposEventosState extends State<TiposEventos> {
 
   /// Construcción del SliverList
   Widget _buildSliverList(Size size) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: GestureDetector(
-              onTap: () {},
-              child: Card(
-                elevation: 4,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: Colors.green, width: 1.5),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildInfoRow(
-                        icon: Icons.numbers,
-                        label: "OP",
-                        value: "${index + 164331}",
-                        color: Colors.black87,
+    return Consumer<OpFechaProvider>(
+      builder: (context, opfech, child) {
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final ind = opfech.opFechas[index];
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                          color: ind.enProceso == '1'
+                              ? Colors.blueGrey
+                              : Colors.green,
+                          width: 1.5),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildInfoRow(
+                            icon: Icons.numbers,
+                            label: "OP",
+                            value: ind.odtCod,
+                            color: Colors.black87,
+                          ),
+                          const Divider(),
+                          _buildInfoRow(
+                            icon: Icons.assignment,
+                            label: "Estado",
+                            value: ind.enProceso,
+                            color: Colors.blueAccent,
+                          ),
+                          const Divider(),
+                        ],
                       ),
-                      const Divider(),
-                      _buildInfoRow(
-                        icon: Icons.assignment,
-                        label: "Estado",
-                        value: "Generado",
-                        color: Colors.blueAccent,
-                      ),
-                      const Divider(),
-                      _buildInfoRow(
-                        icon: Icons.numbers,
-                        label: "OP",
-                        value: "164859",
-                        color: Colors.black,
-                      ),
-                      const Divider(),
-                      _buildInfoRow(
-                        icon: Icons.assignment,
-                        label: "Estado",
-                        value: "Finalizado",
-                        color: Colors.orange,
-                      ),
-                      const Divider(),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-        childCount:
-            1, // Cambia esto según la cantidad de elementos que desees mostrar
-      ),
+              );
+            },
+            childCount: opfech.opFechas
+                .length, // Cambia esto según la cantidad de elementos que desees mostrar
+          ),
+        );
+      },
     );
   }
 
@@ -286,26 +290,111 @@ class _TiposEventosState extends State<TiposEventos> {
     );
   }
 
-  void _navigateToEvent(Map<String, dynamic> evento) {
+  Future<void> _navigateToEvent(Map<String, dynamic> evento) async {
+    final idUser = context.read<AuthProvider>().idOperadors;
     if (evento['preparacion'] == true) {
       Navigator.push(
           context,
           _slideTransition(PreparacionScreen(
-            tipoProceso: '0',
+              tipoProceso: '0',
+              motCodOdt: widget.motCodOdt,
+              secuencyMachine: widget.secuencyMachine,
+              motNroElem: widget.motNroElem,
+              odtMaq: widget.odtMaq,
+              complement: widget.complement,
+              generado: widget.generado)));
+    } else if (evento['produccion'] == true) {
+      _saveTime();
+
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return Center(
+              child: LoadingAnimationWidget.threeRotatingDots(
+                  color: const Color.fromARGB(255, 63, 80, 177), size: 50),
+            );
+          });
+
+      try {
+        await context.read<InsertarEventoProvider>().insertarEvento(
+            nrop: widget.motCodOdt,
+            complemento: widget.complement,
+            elemento: widget.motNroElem,
+            secuencia: widget.secuencyMachine,
+            idmaquina: widget.odtMaq,
+            estadog: widget.generado,
+            idoperador: idUser,
+            tipoproceso: '1',
+            codeevento: '0');
+
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+        // Navegar a la siguiente pantalla después de completar la operación
+        Navigator.push(
+          context,
+          _slideTransition(BotonPadreProduccion(
+            texto: 'produccion',
+            tipoProceso: '1',
             motCodOdt: widget.motCodOdt,
             secuencyMachine: widget.secuencyMachine,
             motNroElem: widget.motNroElem,
             odtMaq: widget.odtMaq,
             complement: widget.complement,
             generado: widget.generado,
-          )));
-    } else if (evento['produccion'] == true) {
-      _saveTime();
+          )),
+        );
+      } catch (error) {
+        // Cerrar el diálogo si hay un error
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+
+        // Mostrar un mensaje de error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error al enviar datos: $error"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else if(evento['navigate'] == true){
+       Navigator.push(
+      context,
+      _slideTransition(const EventosGeneralScreen(
+        tipoProceso: '2',
+      )),
+    );
+    }
+  }
+
+  /*void _navigateToEvent3(Map<String, dynamic> evento) {
+    if (evento['preparacion'] == true) {
       Navigator.push(
           context,
-          _slideTransition(const BotonPadreProduccion(
+          _slideTransition(PreparacionScreen(
+              tipoProceso: '0',
+              motCodOdt: widget.motCodOdt,
+              secuencyMachine: widget.secuencyMachine,
+              motNroElem: widget.motNroElem,
+              odtMaq: widget.odtMaq,
+              complement: widget.complement,
+              generado: widget.generado)));
+    } else if (evento['produccion'] == true) {
+      _saveTime();
+
+      Navigator.push(
+          context,
+          _slideTransition(BotonPadreProduccion(
             texto: 'produccion',
             tipoProceso: '1',
+            motCodOdt: widget.motCodOdt,
+            secuencyMachine: widget.secuencyMachine,
+            motNroElem: widget.motNroElem,
+            odtMaq: widget.odtMaq,
+            complement: widget.complement,
+            generado: widget.generado,
           )));
     } else if (evento['navigate'] == true) {
       Navigator.push(
@@ -314,7 +403,7 @@ class _TiposEventosState extends State<TiposEventos> {
             tipoProceso: '2',
           )));
     }
-  }
+  }*/
 
   PageRouteBuilder _slideTransition(Widget page) {
     return PageRouteBuilder(

@@ -85,9 +85,67 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
             _buildTextField2("Observaciones", obsController, isNumeric: false),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 finalizarProceso(); // Marcar como finalizado y volver a verde
                 widget.onFinish(); // Notificar al padre
+
+             
+
+                showDialog(
+                    context: context,
+                    builder: (_) {
+                      return Center(
+                        child: LoadingAnimationWidget.threeRotatingDots(
+                            color: const Color.fromARGB(255, 63, 80, 177),
+                            size: 50),
+                      );
+                    });
+
+                //finalizarProceso();
+                print(' ${obsController.text}');
+                print(' ${piegosParcialesController.text}');
+                print(' ${piegosParcialesMalosController.text}');
+                print(' ${widget.op}');
+                print(' ${widget.idMaq}');
+                try {
+                  await context.read<ActuEventoFinProvider>().actualizarEvento(
+                      observsa: obsController.text,
+                      pliegosbuenos: piegosParcialesController.text,
+                      pliegosmalos: piegosParcialesMalosController.text,
+                      op: widget.op,
+                      codMaquina: widget.idMaq);
+                    if (!mounted) return;
+
+                showDialog(
+                      // ignore: use_build_context_synchronously
+                      context: context,
+                      //barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        // ignore: avoid_print
+                        
+                        return const AlertDialog(
+                          content: Text('Se actualizó correctamente'),
+                        );
+                      });
+                Navigator.of(context, rootNavigator: true).pop(); // Cierra el loading
+                Navigator.of(context, rootNavigator: true).pop();
+                Navigator.of(context, rootNavigator: true).pop();
+                Navigator.of(context, rootNavigator: true).pop(); 
+                 
+                } catch (e) {
+                  if (!mounted) return;
+                  showDialog(
+                      // ignore: use_build_context_synchronously
+                      context: context,
+                      //barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        // ignore: avoid_print
+                        print('Error: $e');
+                        return AlertDialog(
+                          content: Text('El error $e'),
+                        );
+                      });
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -104,50 +162,8 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () async {
-                    /*
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Center(
-                            child: LoadingAnimationWidget.threeRotatingDots(
-                                color: const Color.fromARGB(255, 63, 80, 177),
-                                size: 50),
-                          );
-                        });*/
-
-                    //finalizarProceso();
-                    print(' ${obsController.text}');
-                    print(' ${piegosParcialesController.text}');
-                    print(' ${piegosParcialesMalosController.text}');
-                    print(' ${widget.op}');
-                    print(' ${widget.idMaq}');
-                    try {
-                      await context
-                          .read<ActuEventoFinProvider>()
-                          .actualizarEvento(
-                              observsa: obsController.text,
-                              pliegosbuenos: piegosParcialesController.text,
-                              pliegosmalos: piegosParcialesMalosController.text,
-                              op: widget.op,
-                              codMaquina: widget.idMaq);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Evento actualizado correctamente")),
-                      );
-                    } catch (e) {
-                      showDialog(
-                          // ignore: use_build_context_synchronously
-                          context: context,
-                          //barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            // ignore: avoid_print
-                            print('Error: $e');
-                            return AlertDialog(
-                              content: Text('El error $e'),
-                            );
-                          });
-                    }
+                  onPressed: () {
+                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   child: const Text('Cerrar'),
@@ -159,6 +175,7 @@ class _UnidadesProcesadasState extends State<UnidadesProcesadas> {
       ),
     );
   }
+  
 
   Widget _buildTextField(String label, TextEditingController controller,
       {bool isNumeric = false}) {

@@ -14,7 +14,8 @@ class ActuEventoFinProvider with ChangeNotifier {
       required String pliegosbuenos,
       required String pliegosmalos,
       required String op,
-      required String codMaquina}) async {
+      required String codMaquina
+      }) async {
 
     _isLoading = true;
     notifyListeners();
@@ -26,7 +27,7 @@ class ActuEventoFinProvider with ChangeNotifier {
         'pliegosParcial': pliegosbuenos,
         'plieghosParcMal': pliegosmalos,
         'op': op,
-        'codMaquina': codMaquina
+        'codMaquina': codMaquina,
       });
 
       if(response.statusCode == 200){

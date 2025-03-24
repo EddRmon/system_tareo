@@ -5,9 +5,15 @@ import 'package:system_tareo/views/navegacion/boton_inicio_produccion.dart';
 import 'package:system_tareo/views/navegacion/reloj_digital.dart';
 
 class BotonPadreProduccion extends StatefulWidget {
-  const BotonPadreProduccion({super.key, required this.texto, required this.tipoProceso});
+  const BotonPadreProduccion({super.key, required this.texto, required this.tipoProceso, required this.motCodOdt, required this.secuencyMachine, required this.motNroElem, required this.odtMaq, required this.complement, required this.generado});
   final String texto;
   final String tipoProceso;
+  final String motCodOdt;
+  final String secuencyMachine;
+  final String motNroElem;
+  final String odtMaq;
+  final String complement;
+  final String generado;
 
   @override
   State<BotonPadreProduccion> createState() => _BotonPadreProduccionState();
